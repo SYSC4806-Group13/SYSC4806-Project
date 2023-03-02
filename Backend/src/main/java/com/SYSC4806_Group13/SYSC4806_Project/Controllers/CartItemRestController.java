@@ -1,7 +1,7 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
+
 import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItem;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,8 +11,12 @@ import java.util.Map;
 
 @RestController
 public class CartItemRestController {
-    @Autowired
-    CartItemRepository cartItemRepo;
+
+    private final CartItemRepository cartItemRepo;
+
+    public CartItemRestController(CartItemRepository cartItemRepo) {
+        this.cartItemRepo = cartItemRepo;
+    }
 
     @GetMapping("/cartItems")
     public Object getUserCartItems(@RequestParam(value = "userID") long userID) {
@@ -22,15 +26,15 @@ public class CartItemRestController {
     @PostMapping("/cartItems")
     public Map<String, Object> postUserCartItem(@RequestBody Map<String, Long> payload) {
         Long userID = payload.get("userID");
-        Long listingID =  payload.get("listingID");
+        Long listingID = payload.get("listingID");
         Long quantity = payload.get("quantity");
 
-        if ( userID==null || listingID==null || quantity==null ) {
+        if (userID == null || listingID == null || quantity == null) {
             // TODO: Update with HG's exception system once it's in
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expecting request body to include userID, listingID, quantity");
         }
 
-        if (quantity<=0) {
+        if (quantity <= 0) {
             // TODO: Update with HG's exception system once it's in
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be non-positive");
         }
@@ -40,7 +44,7 @@ public class CartItemRestController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A cartItem for this user and listing already exists");
         }
 
-        CartItem cartItem = new CartItem(userID,listingID,quantity);
+        CartItem cartItem = new CartItem(userID, listingID, quantity);
         cartItemRepo.save(cartItem);
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -52,15 +56,15 @@ public class CartItemRestController {
     @PutMapping("/cartItems")
     public Map<String, Object> updateUserCartItem(@RequestBody Map<String, Long> payload) {
         Long userID = payload.get("userID");
-        Long listingID =  payload.get("listingID");
+        Long listingID = payload.get("listingID");
         Long quantity = payload.get("quantity");
 
-        if ( userID==null || listingID==null || quantity==null ) {
+        if (userID == null || listingID == null || quantity == null) {
             // TODO: Update with HG's exception system once it's in
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expecting request body to include userID, listingID, quantity");
         }
 
-        if (quantity<=0) {
+        if (quantity <= 0) {
             // TODO: Update with HG's exception system once it's in
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be non-positive");
         }
@@ -69,7 +73,7 @@ public class CartItemRestController {
         if (cartItemToUpdate == null) {
             // No matching listingID for this user
             // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cartItems with listingID="+listingID+" for userID="+userID);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cartItems with listingID=" + listingID + " for userID=" + userID);
         }
 
         // only the quantity can be changed
@@ -86,9 +90,9 @@ public class CartItemRestController {
     @DeleteMapping("/cartItems")
     public Map<String, Object> deleteUserCartItem(@RequestBody Map<String, Long> payload) {
         Long userID = payload.get("userID");
-        Long listingID =  payload.get("listingID");
+        Long listingID = payload.get("listingID");
 
-        if ( userID==null || listingID==null ) {
+        if (userID == null || listingID == null) {
             // TODO: Update with HG's exception system once it's in
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expecting request body to include userID, listingID");
         }
@@ -97,7 +101,7 @@ public class CartItemRestController {
         if (cartItemToUpdate == null) {
             // No matching listingID for this user
             // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cartItems with listingID="+listingID+" for userID="+userID);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cartItems with listingID=" + listingID + " for userID=" + userID);
         }
 
         cartItemRepo.delete(cartItemToUpdate);
