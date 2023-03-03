@@ -1,0 +1,11 @@
+.align-center {
+    justify-content: center;
+}
+
+.icon-spacing {
+    margin-left: 0.5rem;
+}
+
+.image {
+    object-fit: fill !important;
+}
