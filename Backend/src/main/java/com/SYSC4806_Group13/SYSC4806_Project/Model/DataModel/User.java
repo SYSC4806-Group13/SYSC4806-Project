@@ -7,8 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 
-
-
 @Entity(name="UsersTable")
 public class User {
 
@@ -23,6 +21,8 @@ public class User {
     private String imageUrl;
 
     private Boolean emailVerified = false;
+
+    private Boolean isSeller = false;
 
     @JsonIgnore
     private String password = null;
@@ -93,5 +93,13 @@ public class User {
 
     public void setProviderId(String providerId) {
         this.providerId = providerId;
+    }
+
+    public Boolean getIsSeller() {
+        return isSeller;
+    }
+
+    public void setIsSeller(Boolean seller) {
+        isSeller = seller;
     }
 }
