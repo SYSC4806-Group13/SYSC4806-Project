@@ -69,19 +69,17 @@ public class ListingRestController {
             throw new BadAttributeException("Attribute 'title' cannot be empty");
         }
 
-        String price = (String) payload.get("price");
         Float floatPrice;
-
-        if (price == null) {
-            throw new MissingAttributeException("Request body must contain 'price'");
-        }
-
         try {
+            String price = (String) payload.get("price");
+            if (price == null) {
+                throw new MissingAttributeException("Request body must contain 'price'");
+            }
             floatPrice = Float.valueOf(price);
             if (floatPrice < 0) {
                 throw new BadAttributeException("Attribute 'price' cannot be negative");
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ClassCastException e) {
             throw new MissingAttributeException("Attribute 'price' must be formatted in decimal as a string (ex. '1.5')");
         }
 
@@ -186,21 +184,21 @@ public class ListingRestController {
             map.put("title", title);
         }
 
-        String price = (String) payload.get("price");
-        if (price != null) {
-            try {
+        try {
+            String price = (String) payload.get("price");
+            if (price != null) {
                 Float floatPrice = Float.valueOf(price);
                 if (floatPrice < 0) {
                     throw new BadAttributeException("Attribute 'price' cannot be negative");
                 }
                 listing.setPrice(floatPrice);
                 map.put("price", price);
-            } catch (NumberFormatException e) {
-                throw new MissingAttributeException("Attribute 'price' must be formatted in decimal as a string (ex. '1.5')");
+                listing.setPrice(floatPrice);
             }
-
-            listing.setPrice(Float.valueOf(price));
+        } catch (NumberFormatException | ClassCastException e) {
+            throw new MissingAttributeException("Attribute 'price' must be formatted in decimal as a string (ex. '1.5')");
         }
+
 
         String author = (String) payload.get("author");
         if (author != null) {
