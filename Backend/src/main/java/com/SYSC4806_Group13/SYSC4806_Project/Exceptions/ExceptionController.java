@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ListingExceptionController {
+public class ExceptionController {
     @ExceptionHandler(value = MissingAttributeException.class)
     public ResponseEntity<Object> exception(MissingAttributeException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
