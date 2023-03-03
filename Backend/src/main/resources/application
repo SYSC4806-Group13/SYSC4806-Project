@@ -1,0 +1,18 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: --Google client id
+            client-secret: --Google client secret
+            redirectUri: --Redirect to after accepting
+            scope:
+              - email
+              - profile
+
+app:
+  tokenSecret: --JWT Seed Secret
+  tokenExpirationMsec: --Time in milliseconds
+  authorizedRedirectUris:
+    --Allowed redirect usrls
