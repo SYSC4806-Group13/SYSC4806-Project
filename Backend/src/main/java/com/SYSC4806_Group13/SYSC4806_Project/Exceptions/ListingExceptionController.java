@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ListingExceptionController {
-    @ExceptionHandler(value = ListingNotFoundException.class)
-    public ResponseEntity<Object> exception(ListingNotFoundException exception) {
-        return new ResponseEntity<>("Listing not found", HttpStatus.NOT_FOUND);
+    @ExceptionHandler(value = MissingAttributeException.class)
+    public ResponseEntity<Object> exception(MissingAttributeException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = ListingIdMissingException.class)
-    public ResponseEntity<Object> exception(ListingIdMissingException exception) {
-        return new ResponseEntity<>("listingId must be specified in the request body", HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<Object> exception(NotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

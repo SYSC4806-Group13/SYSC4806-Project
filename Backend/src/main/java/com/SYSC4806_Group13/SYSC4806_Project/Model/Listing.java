@@ -6,8 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
-
 @Entity
 public class Listing {
 
@@ -16,8 +14,7 @@ public class Listing {
     private long listingId;
 
     // TODO
-    // userId
-
+    private Long sellerUserId;
     private String ISBN;
     private String title;
     private Float price;
@@ -25,26 +22,24 @@ public class Listing {
     private String publisher;
     private String description;
     private Integer inventory;
-
-//    private java.sql.Timestamp releaseDate;
     private String releaseDate;
     private Boolean isActive;
 
     @Column(nullable = true, length = 64)
     private String coverImage;
 
-    public Listing(String ISBN,
+    public Listing(Long sellerUserId,
+                   String ISBN,
                    String title,
                    Float price,
                    String author,
                    String publisher,
                    String description,
                    Integer inventory,
-//                   Timestamp releaseDate,
                    String releaseDate,
                    Boolean isActive,
                    String coverImage) {
-        this.listingId = listingId;
+        this.sellerUserId = sellerUserId;
         this.ISBN = ISBN;
         this.title = title;
         this.price = price;
@@ -61,7 +56,15 @@ public class Listing {
 
     }
 
-    public long getListingId() {
+    public Long getSellerUserId() {
+        return sellerUserId;
+    }
+
+    public void setSellerUserId(long sellerUserId) {
+        this.sellerUserId = sellerUserId;
+    }
+
+    public Long getListingId() {
         return listingId;
     }
 
@@ -124,14 +127,6 @@ public class Listing {
     public void setInventory(Integer inventory) {
         this.inventory = inventory;
     }
-
-//    public Timestamp getReleaseDate() {
-//        return releaseDate;
-//    }
-//
-//    public void setReleaseDate(Timestamp releaseDate) {
-//        this.releaseDate = releaseDate;
-//    }
 
     public String getReleaseDate() {
         return releaseDate;
