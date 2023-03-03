@@ -2,10 +2,10 @@ import * as React from 'react';
 import ListingGrid from 'src/components/Listing/ListingGrid';
 import PageHeader from 'src/components/PageHeader';
 
-export interface IListingProps {
+export interface IAllListingsProps {
 }
 
-export default function Listing(props: IListingProps) {
+export default function AllListings(props: IAllListingsProps) {
     const listing = [
         {
             cardName: 'test',

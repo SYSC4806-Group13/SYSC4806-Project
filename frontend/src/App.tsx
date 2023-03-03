@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Listing from 'src/pages/Listing';
+import AllListings from 'src/pages/AllListings';
 
 export default function App() {
   return (
-    <Listing />
+    <AllListings />
   );
 }
