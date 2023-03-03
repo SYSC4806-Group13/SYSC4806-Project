@@ -16,4 +16,9 @@ public class ExceptionController {
     public ResponseEntity<Object> exception(NotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = BadAttributeException.class)
+    public ResponseEntity<Object> exception(BadAttributeException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
