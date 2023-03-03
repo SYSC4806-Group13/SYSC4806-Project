@@ -4,7 +4,7 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Container } from '@mui/system';
-import ScrollTop from './ScrollTop';
+import ScrollTop from 'src/components/ScrollTop';
 
 export interface IPageHeaderProps {
     headerTitle: string,

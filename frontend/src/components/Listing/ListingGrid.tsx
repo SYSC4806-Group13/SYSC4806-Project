@@ -2,7 +2,7 @@ import * as React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Grid, Container, Typography, Grow, Paper } from '@mui/material';
 import ListingCard from './ListingCard';
-import '../styles/ListingGrid.css'
+import 'src/styles/ListingGrid.css'
 
 export interface IListingGridProps {
     listings: Array<{

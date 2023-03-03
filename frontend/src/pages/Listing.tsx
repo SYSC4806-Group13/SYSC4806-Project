@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ListingGrid from '../components/ListingGrid';
-import PageHeader from '../components/PageHeader';
+import ListingGrid from 'src/components/Listing/ListingGrid';
+import PageHeader from 'src/components/PageHeader';
 
 export interface IListingProps {
 }

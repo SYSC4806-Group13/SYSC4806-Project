@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { capitalize } from '@mui/material/utils';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import '../styles/ListingCard.css'
+import 'src/styles/ListingCard.css'
 
 export interface IListingCardProps {
     cardName: string,
