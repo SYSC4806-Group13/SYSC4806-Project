@@ -13,7 +13,6 @@ public class Listing {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long listingId;
 
-    // TODO
     private Long sellerUserId;
     private String ISBN;
     private String title;
@@ -25,6 +24,7 @@ public class Listing {
     private String releaseDate;
     private Boolean isActive;
 
+    // TODO needs to be updated once we handle file upload
     @Column(nullable = true, length = 64)
     private String coverImage;
 

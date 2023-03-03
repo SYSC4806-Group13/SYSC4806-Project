@@ -66,7 +66,7 @@ public class ListingRestController {
         Float floatPrice;
 
         if (price == null) {
-            throw new MissingAttributeException("Request body must contain 'title'");
+            throw new MissingAttributeException("Request body must contain 'price'");
         }
 
         try {
