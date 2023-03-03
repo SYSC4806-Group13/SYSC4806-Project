@@ -14,11 +14,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-public class ListingEndpoint {
+public class ListingRestController {
 
     private final ListingRepository repo;
 
-    public ListingEndpoint(ListingRepository repo) {
+    public ListingRestController(ListingRepository repo) {
         this.repo = repo;
     }
 
@@ -105,6 +105,7 @@ public class ListingEndpoint {
             throw new MissingAttributeException("Request body must contain 'coverImage'");
         }
 
+        Boolean isActive = true;
 
         Listing listing = new Listing(
                 sellerUserId.longValue(),
@@ -116,7 +117,7 @@ public class ListingEndpoint {
                 description,
                 inventory,
                 releaseDate,
-                true,
+                isActive,
                 coverImage
         );
 
