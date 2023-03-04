@@ -36,6 +36,7 @@ jobs:
         echo "$APP_TOKEN_KEY" >> Backend/src/main/resources/application.properties
         echo "$APP_TOKEN_INVALIDATION_TIME" >> Backend/src/main/resources/application.properties
         echo "$APP_TOKEN_AUTH_REDIRECT" >> Backend/src/main/resources/application.properties
+        cat Backend/src/main/resources/application.properties
       env:
         API_KEY: ${{ secrets.GOOGLE_CLIENT }}
         API_SECRET: ${{ secrets.GOOGLE_SECRET }}
