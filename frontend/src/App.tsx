@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
@@ -71,7 +72,13 @@ function App() {
       </header>
       
     </div>
+=======
+import * as React from 'react';
+import AllListings from 'src/pages/AllListings';
+
+export default function App() {
+  return (
+    <AllListings />
+>>>>>>> main
   );
 }
-
-export default App;
