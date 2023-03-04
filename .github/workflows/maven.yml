@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Input Secrets
-    - shell: bash
+      shell: bash
       env:
         API_KEY: ${{ secrets.GOOGLE_CLIENT }}
         API_SECRET: ${{ secrets.GOOGLE_SECRET }}
