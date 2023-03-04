@@ -34,13 +34,12 @@ public class CartItemRestControllerTest {
     private CartItemRestController restController;
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    AuthenticationSuperUserUtil usersUtil;
     @Autowired
     TokenProvider tokenProvider;
     @Autowired
     private CartItemRepository cartItemRepository;
+    @Autowired
+    AuthenticationSuperUserUtil usersUtil;
     private String token;
 
     @BeforeEach

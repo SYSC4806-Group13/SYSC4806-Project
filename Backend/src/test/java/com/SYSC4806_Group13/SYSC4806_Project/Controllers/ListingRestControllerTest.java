@@ -1,5 +1,6 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
+import com.SYSC4806_Group13.SYSC4806_Project.AuthenticationSuperUserUtil;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.ListingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +34,15 @@ public class ListingRestControllerTest {
     @Autowired
     private ListingRepository listingRepository;
 
+    @Autowired
+    AuthenticationSuperUserUtil usersUtil;
+    private String token;
+
     @BeforeEach
     public void beforeEachTest() {
+        //Add the SuperUser and token
+        usersUtil.setSuperUserInRepo();
+        this.token = usersUtil.getSuperUserToken();
         // Reset the database to prevent tests from affecting each other
         listingRepository.deleteAll();
     }
@@ -78,6 +86,7 @@ public class ListingRestControllerTest {
 
         // Create Listing 1
         mockMvc.perform(post("/listings")
+                        .header("Authorization", "Bearer "+token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -86,13 +95,15 @@ public class ListingRestControllerTest {
         // Create Listing 2
         map.replace("sellerUserId", sellerUserId2);
         mockMvc.perform(post("/listings")
+                        .header("Authorization", "Bearer "+token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
                 .andExpect(status().is2xxSuccessful());
 
         // Get both listings
-        result = mockMvc.perform(get("/listings"))
+        result = mockMvc.perform(get("/listings")
+                        .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -100,7 +111,8 @@ public class ListingRestControllerTest {
         Assertions.assertEquals(2, list.size());
 
         // Get listings by sellerUserId
-        result = mockMvc.perform(get("/listings?sellerUserId=123"))
+        result = mockMvc.perform(get("/listings?sellerUserId=123")
+                        .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -113,13 +125,15 @@ public class ListingRestControllerTest {
         map.replace("price", price2);
 
         mockMvc.perform(put("/listings")
+                        .header("Authorization", "Bearer "+token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
                 .andExpect(status().is2xxSuccessful());
 
         // Check if listing was updated
-        result = mockMvc.perform(get("/listings/1"))
+        result = mockMvc.perform(get("/listings/1")
+                        .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -129,12 +143,14 @@ public class ListingRestControllerTest {
 
         // Delete the listing
         mockMvc.perform(delete("/listings/1")
+                .header("Authorization", "Bearer "+token)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(asJsonString(map))
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure the deleted listing is now inactive
-        result = mockMvc.perform(get("/listings/1"))
+        result = mockMvc.perform(get("/listings/1")
+                        .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -147,6 +163,7 @@ public class ListingRestControllerTest {
         HashMap<String, Object> map = new HashMap<String, Object>();
         // Listing does not exist
         mockMvc.perform(get("/listings/10")
+                        .header("Authorization", "Bearer "+token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -158,6 +175,7 @@ public class ListingRestControllerTest {
         HashMap<String, Object> map = new HashMap<String, Object>();
         // Listing does not exist
         mockMvc.perform(delete("/listings/10")
+                        .header("Authorization", "Bearer "+token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -171,6 +189,7 @@ public class ListingRestControllerTest {
         map.put("title", "new title");
         // Listing does not exist
         mockMvc.perform(put("/listings")
+                        .header("Authorization", "Bearer "+token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
