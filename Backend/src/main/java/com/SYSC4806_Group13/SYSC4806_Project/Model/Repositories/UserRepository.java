@@ -1,16 +1,16 @@
-package com.SYSC4806_Group13.SYSC4806_Project.Repository;
+package com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories;
 
-import com.SYSC4806_Group13.SYSC4806_Project.Model.User;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.User;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 /**
  * Repo to store users information Currently is H2 in memory database, we should change to another later
  */
-@Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(String email);
+
+    User findUserById(long id);
 }

@@ -2,14 +2,16 @@ package com.SYSC4806_Group13.SYSC4806_Project.Service;
 
 
 import com.SYSC4806_Group13.SYSC4806_Project.Exception.ResourceNotFoundException;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.User;
-import com.SYSC4806_Group13.SYSC4806_Project.Repository.UserRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.User;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.UserRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,7 +30,7 @@ public class UserServiceImpl implements UserService {
         return UserPrincipal.create(user);
     }
 
-    public UserDetails loadUserById(Integer id) {
+    public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );

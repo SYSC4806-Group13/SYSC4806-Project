@@ -30,9 +30,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(request);
+            System.out.println(jwt);
+            System.out.println(tokenProvider.validateToken(jwt));
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                Integer userId = Integer.parseInt(tokenProvider.getUserIdFromToken(jwt));
+                Long userId = Long.parseLong(tokenProvider.getUserIdFromToken(jwt));
 
                 UserDetails userDetails = userService.loadUserById(userId);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

@@ -1,7 +1,7 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
-import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItem;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItemRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.CartItem;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;

@@ -1,9 +1,9 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Security.oauth2;
 
 import com.SYSC4806_Group13.SYSC4806_Project.Exception.OAuth2AuthenticationProcessingException;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.AuthProvider;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.User;
-import com.SYSC4806_Group13.SYSC4806_Project.Repository.UserRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.AuthProvider;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.User;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.UserRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Security.UserPrincipal;
 
 import com.SYSC4806_Group13.SYSC4806_Project.Security.oauth2.user.OAuth2UserInfo;

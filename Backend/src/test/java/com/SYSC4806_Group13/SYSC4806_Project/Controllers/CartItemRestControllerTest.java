@@ -1,16 +1,18 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
-import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItemRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.AuthenticationSuperUserUtil;
+import com.SYSC4806_Group13.SYSC4806_Project.Security.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Assert;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,10 +36,18 @@ public class CartItemRestControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
+    AuthenticationSuperUserUtil usersUtil;
+    @Autowired
+    TokenProvider tokenProvider;
+    @Autowired
     private CartItemRepository cartItemRepository;
+    private String token;
 
     @BeforeEach
     public void beforeEachTest() {
+        //Add the SuperUser and token
+        usersUtil.setSuperUserInRepo();
+        this.token = usersUtil.getSuperUserToken();
         // Reset the database to prevent tests from affecting each other
         cartItemRepository.deleteAll();
     }
@@ -62,6 +72,7 @@ public class CartItemRestControllerTest {
 
         // ADD LISTING ID 1
         mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -70,13 +81,15 @@ public class CartItemRestControllerTest {
         // ADD LISTING ID 1
         map.replace("listingID", listingID2);
         mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
                 .andExpect(status().is2xxSuccessful());
 
         // GET BOTH CART ITEMS WITH DIFFERENT LISTING IDs
-        result = mockMvc.perform(get("/cartItems?userID=123"))
+        result = mockMvc.perform(get("/cartItems?userID=123")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -92,19 +105,22 @@ public class CartItemRestControllerTest {
         // UPDATE BOTH CART ITEM QUANTITIES TO 2
         map.replace("quantity", 2L);
         mockMvc.perform(put("/cartItems")
+                        .header("Authorization", "Bearer " + token).header("authentication", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
                 .andExpect(status().is2xxSuccessful());
         map.replace("listingID", listingID1);
         mockMvc.perform(put("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
                 .andExpect(status().is2xxSuccessful());
 
         // ENSURE QUANTITIES GOT UPDATED
-        result = mockMvc.perform(get("/cartItems?userID=123"))
+        result = mockMvc.perform(get("/cartItems?userID=123")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -119,12 +135,14 @@ public class CartItemRestControllerTest {
 
         // DELETE CART ITEM FOR LISTING ID 1
         mockMvc.perform(delete("/cartItems")
+                .header("Authorization", "Bearer " + token)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(asJsonString(map))
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure only one cart item remains
-        result = mockMvc.perform(get("/cartItems?userID=123"))
+        result = mockMvc.perform(get("/cartItems?userID=123")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
@@ -133,12 +151,14 @@ public class CartItemRestControllerTest {
         // DELETE CART ITEM FOR LISTING ID 2
         map.replace("listingID", listingID2);
         mockMvc.perform(delete("/cartItems")
+                .header("Authorization", "Bearer " + token)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(asJsonString(map))
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure empty response
-        result = mockMvc.perform(get("/cartItems?userID=123"))
+        result = mockMvc.perform(get("/cartItems?userID=123")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
@@ -154,6 +174,7 @@ public class CartItemRestControllerTest {
 
         // Can't delete non-existing cartItems
         mockMvc.perform(delete("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -170,6 +191,7 @@ public class CartItemRestControllerTest {
 
         // First post OK
         mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -177,6 +199,7 @@ public class CartItemRestControllerTest {
 
         // post again and it fails
         mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )

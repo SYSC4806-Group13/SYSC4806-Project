@@ -1,12 +1,11 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Security.oauth2.user;
 
 
-
 import com.SYSC4806_Group13.SYSC4806_Project.Exception.OAuth2AuthenticationProcessingException;
 
 import java.util.Map;
 
-import static com.SYSC4806_Group13.SYSC4806_Project.Model.AuthProvider.google;
+import static com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.AuthProvider.google;
 
 
 public class OAuth2UserInfoFactory {

@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Application Env Vars ##
-/resources/application.yml
+application.yml
