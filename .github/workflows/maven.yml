@@ -27,5 +27,23 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: Adding Secrets
+      run:
+        echo "$API_KEY" >> Backend/src/main/resources/application.properties
+        echo "$API_SECRET" >> Backend/src/main/resources/application.properties
+        echo "$API_REDIRECT" >> Backend/src/main/resources/application.properties
+        echo "$API_SCOPE" >> Backend/src/main/resources/application.properties
+        echo "$APP_TOKEN_KEY" >> Backend/src/main/resources/application.properties
+        echo "$APP_TOKEN_INVALIDATION_TIME" >> Backend/src/main/resources/application.properties
+        echo "$APP_TOKEN_AUTH_REDIRECT" >> Backend/src/main/resources/application.properties
+      env:
+        API_KEY: ${{ secrets.GOOGLE_CLIENT }}
+        API_SECRET: ${{ secrets.GOOGLE_SECRET }}
+        API_REDIRECT: ${{ secrets.GOOGLE_REDIRECT }}
+        API_SCOPE: ${{ secrets.GOOGLE_SCOPE }}
+        APP_TOKEN_KEY: ${{ secrets.APP_TOKEN_SECRET }}
+        APP_TOKEN_INVALIDATION_TIME: ${{ secrets.APP_TOKEN_EXPIRATION }}
+        APP_TOKEN_AUTH_REDIRECT: ${{ secrets.APP_TOKEN_ALLOWED_REDIRECT }}
+
     - name: Build with Maven
       run: mvn -B package --file Backend/pom.xml
