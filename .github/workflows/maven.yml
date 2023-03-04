@@ -27,25 +27,5 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Write to Application.properties
-      uses: christian-draeger/write-properties@1.1.0
-      with:
-          path: './Backend/src/main/resources/application.properties'
-          property: |
-              'spring.security.oauth2.client.registration.google.client-id'
-              'spring.security.oauth2.client.registration.google.client-secret'
-              'spring.security.oauth2.client.registration.google.redirectUri'
-              'spring.security.oauth2.client.registration.google.scope'
-              'app.tokenSecret'
-              'app.tokenExpirationMsec'
-              'app.authorizedRedirectUris'
-          value: |
-            ${{secrets.GOOGLE_CLIENT}}
-            ${{secrets.GOOGLE_SECRET}} 
-            ${{secrets.GOOGLE_REDIRECT}} 
-            ${{secrets.GOOGLE_SCOPE}} 
-            ${{secrets.APP_TOKEN_SECRET}} 
-            ${{secrets.APP_TOKEN_EXPIRATION}} 
-            ${{secrets.APP_TOKEN_ALLOWED_REDIRECT}}
     - name: Build with Maven
       run: mvn -B package --file Backend/pom.xml
