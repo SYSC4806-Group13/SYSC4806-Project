@@ -15,4 +15,4 @@ app:
   tokenSecret: --JWT Seed Secret
   tokenExpirationMsec: --Time in milliseconds
   authorizedRedirectUris:
-    --Allowed redirect usrls
+    --Allowed redirect usrl
