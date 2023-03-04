@@ -30,7 +30,7 @@ jobs:
     - name: Write to Application.properties
       uses: christian-draeger/write-properties@1.1.0
       with:
-          path: './src/main/resources/application.properties'
+          path: './Backend/src/main/resources/application.properties'
           property: |
               'spring.security.oauth2.client.registration.google.client-id'
               'spring.security.oauth2.client.registration.google.client-secret'
