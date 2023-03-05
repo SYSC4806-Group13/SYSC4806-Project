@@ -2,9 +2,11 @@ import * as React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { DialogActions, Button } from '@mui/material'
 import CustomTextField from 'src/components/Form/TextField';
+import { useHttpClient } from 'src/hooks/http-hook';
 
 export interface ISellerListingFormProps {
-    handleCloseDialog: () => void
+    handleCloseDialog: () => void,
+    sellerId: string | undefined
 }
 
 interface IFormInput {
@@ -20,6 +22,7 @@ interface IFormInput {
 
 export default function SellerListingForm(props: ISellerListingFormProps) {
     const defaultValues = {
+        sellerUserId: props.sellerId,
         isbn: "",
         title: "",
         author: "",
@@ -29,10 +32,17 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
         price: 0.0,
         releaseDate: new Date().toISOString().slice(0, 10)
     };
+    const { sendRequest } = useHttpClient();
     const formMethods = useForm({ defaultValues });
-    const { handleSubmit, reset, control, setValue, formState: { errors } } = formMethods;
-    const onSubmit: SubmitHandler<IFormInput> = data => {
-        console.info(data)
+    const { handleSubmit, control, formState: { errors } } = formMethods;
+    const onSubmit: SubmitHandler<IFormInput> = async data => {
+        const dataCopy = JSON.parse(JSON.stringify(data))
+        dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId)
+        dataCopy.price = parseFloat(dataCopy.price).toFixed(2)
+        dataCopy.inventory = parseInt(dataCopy.inventory)
+        dataCopy.coverImage = "/static/images/book-cover.jpg"
+        await sendRequest("/listings", "POST", dataCopy)
+        props.handleCloseDialog()
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
