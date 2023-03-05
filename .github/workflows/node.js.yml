@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./frontend
+    defaults:
+      run:
+        working-directory: ${{ env.working-directory }}
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js
