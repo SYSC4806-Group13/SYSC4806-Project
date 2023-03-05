@@ -1,4 +1,4 @@
-package com.SYSC4806_Group13.SYSC4806_Project.Exception;
+package com.SYSC4806_Group13.SYSC4806_Project.Exceptions;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

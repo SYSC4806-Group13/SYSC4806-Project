@@ -34,3 +34,4 @@ build/
 
 ### Application Env Vars ##
 application.yml
+application.properties

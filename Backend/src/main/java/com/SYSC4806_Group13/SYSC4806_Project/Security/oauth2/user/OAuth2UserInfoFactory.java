@@ -1,7 +1,7 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Security.oauth2.user;
 
 
-import com.SYSC4806_Group13.SYSC4806_Project.Exception.OAuth2AuthenticationProcessingException;
+import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.OAuth2AuthenticationProcessingException;
 
 import java.util.Map;
 

@@ -8,4 +8,8 @@ public interface UserService {
     UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
 
     UserDetails loadUserById(Long id);
+
+    UserDetails loadUserByIdAndEmail(long id, String email);
+
+
 }

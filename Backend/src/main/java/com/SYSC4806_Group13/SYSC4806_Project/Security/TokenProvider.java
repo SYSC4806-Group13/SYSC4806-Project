@@ -24,20 +24,30 @@ public class TokenProvider {
         Date expiryDate = new Date(now.getTime() + appConfig.getTokenExpirationMsec());
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getId().toString()))
+                .setSubject((userPrincipal.getId().toString() + "|" + userPrincipal.getEmail()))
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, appConfig.getTokenSecret())
                 .compact();
     }
 
-    public String getUserIdFromToken(String token) {
+    /**
+     * The subject is stored as id|email therefore split by |
+     * 0 index is id and 1 index is email
+     * @param token the jwt token
+     * @return
+     */
+    public String[] getUserIdAndEmailFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(appConfig.getTokenSecret())
                 .parseClaimsJws(token)
                 .getBody();
+        int index =  claims.getSubject().indexOf("|");
 
-        return claims.getSubject();
+        String[] userIdAndEmail = {claims.getSubject().substring(0,index),
+                claims.getSubject().substring(index+1,claims.getSubject().length())};
+
+        return userIdAndEmail;
     }
 
     public boolean validateToken(String authToken) throws SignatureException {

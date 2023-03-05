@@ -10,12 +10,12 @@ public class AuthenticationSuperUserUtil {
 
     @Autowired
     UserRepository userRepository;
-    private String superUserToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjc3OTA2MDg3LCJleHAiOjE2Nzg3NzAwODd9.DrW5m8RYEerm4zZXv01-8uzbtF3x7CzpR4lNg_ynxUKejtIEynHuhZjoblPJsPdnHp89hVSoaKKVZKDpu6K9_A";
+    private String superUserToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxfGtldmluZGFmb3hAZ21haWwuY29tIiwiaWF0IjoxNjc3OTc0MDY4LCJleHAiOjEwMDAxNjc3OTc0MDY4fQ.o8344BIRE1Zoqcy28csynjkL2baU1F4oZRrjbJYQMHcPHCmz2ZsTxViwx86gvkaRADe7zNrrKUhox7J2un1wZQ";
     public void setSuperUserInRepo(){
         User user = new User();
         user.setId(1L);
         user.setName("Super user");
-        user.setEmail("SuperEmail");
+        user.setEmail("kevindafox@gmail.com");
         user.setImageUrl("SuperImage");
         user.setIsSeller(false);
         user.setEmailVerified(false);

@@ -1,18 +1,16 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
-import com.SYSC4806_Group13.SYSC4806_Project.Exception.ResourceNotFoundException;
+import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.ResourceNotFoundException;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.User;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.UserRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Security.CurrentUser;
 import com.SYSC4806_Group13.SYSC4806_Project.Security.UserPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")

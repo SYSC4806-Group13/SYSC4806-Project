@@ -24,7 +24,7 @@ public class AppConfig {
     private String tokenSecret;
 
     /**
-     * Expirery of the Token in Msec default set in application.yml-> 864000000msec -> 10 days
+     * Expiry of the Token in Msec default set in application.properties-> 864000000msec -> 10 days
      */
     private long tokenExpirationMsec;
 }

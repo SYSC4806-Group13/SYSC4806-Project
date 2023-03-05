@@ -1,7 +1,7 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Security.oauth2;
 
 import com.SYSC4806_Group13.SYSC4806_Project.Config.AppConfig;
-import com.SYSC4806_Group13.SYSC4806_Project.Exception.BadRequestException;
+import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.BadRequestException;
 import com.SYSC4806_Group13.SYSC4806_Project.Security.TokenProvider;
 import com.SYSC4806_Group13.SYSC4806_Project.Utils.CookieUtils;
 import lombok.RequiredArgsConstructor;
