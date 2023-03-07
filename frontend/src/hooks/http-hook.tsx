@@ -24,7 +24,7 @@ export const useHttpClient = () => {
       try {
         switch (method) {
           case "GET":
-            res = await axios.get(url, config);
+            res = await axios.get(url);
             break;
           case "POST":
             res = await axios.post(url, body);
