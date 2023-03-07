@@ -1,36 +1,38 @@
-import { useState, useCallback, useContext } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
-import { UserLoginContext } from "src/context/userLoginContext";
 import { isAuthenticationNeeded } from "src/constants/endpoints";
 
 export const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { jwtToken } = useContext(UserLoginContext);
-
   const sendRequest = useCallback(
     async (path = "", method = "GET", body: {}, headers = {}) => {
       setIsLoading(true);
-      const config = isAuthenticationNeeded(path)
-        ? headers
-        : { Authorization: `Bearer ${jwtToken}` };
-      isAuthenticationNeeded(path);
+
+      let requestHeaders = isAuthenticationNeeded(path)
+        ? { Authorization: "Bearer " + localStorage.getItem("amazin_jwt") }
+        : {};
 
       const host = "http://localhost:8080";
       const url = host + path;
       let res = null;
-
+      let config = {
+        headers: requestHeaders,
+      };
       try {
         switch (method) {
           case "GET":
-            res = await axios.get(url);
+            res = await axios.get(url, config);
             break;
           case "POST":
-            res = await axios.post(url, body);
+            res = await axios.post(url, body, config);
             break;
           case "DELETE":
-            res = await axios.delete(url, { headers: config, data: { body } });
+            res = await axios.delete(url, {
+              headers: requestHeaders,
+              data: { body },
+            });
             break;
           case "PATCH":
             res = await axios.patch(url, body, config);

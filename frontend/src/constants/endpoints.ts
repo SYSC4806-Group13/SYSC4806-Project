@@ -1,4 +1,4 @@
-export const LISTING = "/listing"
+export const LISTING = "/listings"
 
 export const isAuthenticationNeeded = (endPoint: string) => {
     const autheticatedURLS = [LISTING]
