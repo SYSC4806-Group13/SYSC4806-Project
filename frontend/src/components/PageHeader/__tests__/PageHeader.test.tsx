@@ -43,7 +43,7 @@ describe("Testing PageHeader", () => {
     expect(loginButton).toHaveLength(0);
   });
 
-  it("renders the page with header logged out", () => {
+  it("renders the header logged out", () => {
     render(
       <UserLoginContext.Provider
         value={{
