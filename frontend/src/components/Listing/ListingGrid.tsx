@@ -17,7 +17,7 @@ export interface IListingGridProps {
 export default function ListingGrid(props: IListingGridProps) {
     if (props.listings.length === 0) {
         return (
-            <Typography variant="h4" align='center' color='text.secondary'>
+            <Typography variant="h4" align='center' color='text.secondary' mt={2}>
                 No listings found
             </Typography>
         );
