@@ -112,8 +112,12 @@ export default function PageHeader(props: IPageHeaderProps) {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
-              <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+              {isLoggedIn && (
+                <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
+              )}
+              {isLoggedIn && (
+                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+              )}
             </Menu>
           </Toolbar>
         </Container>

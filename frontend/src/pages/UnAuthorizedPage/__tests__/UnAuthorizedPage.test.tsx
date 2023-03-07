@@ -14,7 +14,7 @@ describe("Testing UnAuthorizedPage", () => {
   it("renders the page", () => {
     render(<UnAuthorizedPage />);
     const headerElement = screen.getByText(
-      /This is a sample of an logged out page/i
+      /This is a sample of a page where you were not authorized/i
     );
     const paragraphElement = screen.getByText(
       /If you see this, you are not loggedin/i
