@@ -27,7 +27,6 @@ export default function PageHeader(props: IPageHeaderProps) {
   const { isLoggedIn, logIn, logOut } = useContext(UserLoginContext);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    console.log(event);
     setAnchorEl(event.currentTarget);
   };
 
@@ -87,38 +86,38 @@ export default function PageHeader(props: IPageHeaderProps) {
                 Log In
               </button>
             )}
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              {isLoggedIn && (
-                <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
-              )}
-              {isLoggedIn && (
-                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-              )}
-            </Menu>
+            {isLoggedIn && (
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
+                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                </Menu>
+              </>
+            )}
           </Toolbar>
         </Container>
       </AppBar>
