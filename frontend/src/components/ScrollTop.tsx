@@ -1,30 +1,30 @@
-import * as React from 'react';
-import { Zoom, Box, useScrollTrigger } from '@mui/material';
+import * as React from 'react'
+import { Zoom, Box, useScrollTrigger } from '@mui/material'
 
 export interface IScrollTopProps {
-    children: React.ReactElement;
+  children: React.ReactElement
 }
 
-export default function ScrollTop(props: IScrollTopProps) {
-    const { children } = props;
-    const trigger = useScrollTrigger({
-        disableHysteresis: true,
-        threshold: 100,
-    });
+export default function ScrollTop (props: IScrollTopProps): JSX.Element {
+  const { children } = props
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 100
+  })
 
-    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        const anchor = (
-            (event.target as HTMLDivElement).ownerDocument || document
-        ).querySelector('#back-to-top-anchor');
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+    const anchor = (
+      (event.target as HTMLDivElement).ownerDocument || document // eslint-disable-line
+    ).querySelector('#back-to-top-anchor')
 
-        if (anchor) {
-            anchor.scrollIntoView({
-                block: 'center',
-            });
-        }
-    };
+    if (anchor != null) {
+      anchor.scrollIntoView({
+        block: 'center'
+      })
+    }
+  }
 
-    return (
+  return (
         <Zoom in={trigger}>
             <Box
                 onClick={handleClick}
@@ -34,5 +34,5 @@ export default function ScrollTop(props: IScrollTopProps) {
                 {children}
             </Box>
         </Zoom>
-    );
+  )
 }

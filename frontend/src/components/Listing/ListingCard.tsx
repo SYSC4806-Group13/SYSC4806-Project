@@ -1,22 +1,22 @@
-import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { Button, CardActionArea, CardActions } from '@mui/material';
-import { capitalize } from '@mui/material/utils';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import * as React from 'react'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import Typography from '@mui/material/Typography'
+import { Button, CardActionArea, CardActions } from '@mui/material'
+import { capitalize } from '@mui/material/utils'
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 import 'src/styles/ListingCard.css'
 
 export interface IListingCardProps {
-    cardName: string,
-    author: string,
-    price: string,
-    image: string,
-    alt: string
+  cardName: string
+  author: string
+  price: string
+  image: string
+  alt: string
 }
 
-export default function ListingCard (props: IListingCardProps) {
+export default function ListingCard (props: IListingCardProps): JSX.Element {
   return (
     <Card>
       <CardActionArea>
@@ -48,5 +48,5 @@ export default function ListingCard (props: IListingCardProps) {
         </Button>
       </CardActions>
     </Card>
-  );
+  )
 }

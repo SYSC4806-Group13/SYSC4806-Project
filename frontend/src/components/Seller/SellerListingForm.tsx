@@ -1,50 +1,50 @@
-import * as React from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import * as React from 'react'
+import { useForm, type SubmitHandler } from 'react-hook-form'
 import { DialogActions, Button } from '@mui/material'
-import CustomTextField from 'src/components/Form/TextField';
-import { useHttpClient } from 'src/hooks/http-hook';
+import CustomTextField from 'src/components/Form/TextField'
+import { useHttpClient } from 'src/hooks/http-hook'
 
 export interface ISellerListingFormProps {
-    handleCloseDialog: () => void,
-    sellerId: string | undefined
+  handleCloseDialog: () => void
+  sellerId: string | undefined
 }
 
 interface IFormInput {
-    isbn: string,
-    title: string,
-    author: string,
-    publisher: string,
-    description: string,
-    inventory: number,
-    price: number,
-    releaseDate: string
+  isbn: string
+  title: string
+  author: string
+  publisher: string
+  description: string
+  inventory: number
+  price: number
+  releaseDate: string
 }
 
-export default function SellerListingForm(props: ISellerListingFormProps) {
-    const defaultValues = {
-        sellerUserId: props.sellerId,
-        isbn: "",
-        title: "",
-        author: "",
-        publisher: "",
-        description: "",
-        inventory: 0,
-        price: 0.0,
-        releaseDate: new Date().toISOString().slice(0, 10)
-    };
-    const { sendRequest } = useHttpClient();
-    const formMethods = useForm({ defaultValues });
-    const { handleSubmit, control, formState: { errors } } = formMethods;
-    const onSubmit: SubmitHandler<IFormInput> = async data => {
-        const dataCopy = JSON.parse(JSON.stringify(data))
-        dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId)
-        dataCopy.price = parseFloat(dataCopy.price).toFixed(2)
-        dataCopy.inventory = parseInt(dataCopy.inventory)
-        dataCopy.coverImage = "/static/images/book-cover.jpg"
-        await sendRequest("/listings", "POST", dataCopy)
-        props.handleCloseDialog()
-    }
-    return (
+export default function SellerListingForm (props: ISellerListingFormProps): JSX.Element {
+  const defaultValues = {
+    sellerUserId: props.sellerId,
+    isbn: '',
+    title: '',
+    author: '',
+    publisher: '',
+    description: '',
+    inventory: 0,
+    price: 0.0,
+    releaseDate: new Date().toISOString().slice(0, 10)
+  }
+  const { sendRequest } = useHttpClient()
+  const formMethods = useForm({ defaultValues })
+  const { handleSubmit, control, formState: { errors } } = formMethods
+  const onSubmit: SubmitHandler<IFormInput> = async data => {
+    const dataCopy = JSON.parse(JSON.stringify(data))
+    dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId)
+    dataCopy.price = parseFloat(dataCopy.price).toFixed(2)
+    dataCopy.inventory = parseInt(dataCopy.inventory)
+    dataCopy.coverImage = '/static/images/book-cover.jpg'
+    await sendRequest('/listings', 'POST', dataCopy)
+    props.handleCloseDialog()
+  }
+  return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <CustomTextField label='ISBN' name='isbn' number control={control} required errors={errors}/>
             <CustomTextField label='Title' name='title' control={control} required errors={errors}/>
@@ -59,5 +59,5 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
                 <Button color="success" type="submit">Submit</Button>
             </DialogActions>
         </form>
-    );
+  )
 }

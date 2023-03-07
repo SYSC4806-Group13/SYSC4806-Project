@@ -1,39 +1,39 @@
-import * as React from 'react';
-import { useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Fab, IconButton, Menu, MenuItem } from '@mui/material';
-import StorefrontIcon from '@mui/icons-material/Storefront';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { Container } from '@mui/system';
-import ScrollTop from 'src/components/ScrollTop';
+import * as React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppBar, Toolbar, Typography, Fab, IconButton, Menu, MenuItem } from '@mui/material'
+import StorefrontIcon from '@mui/icons-material/Storefront'
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import { Container } from '@mui/system'
+import ScrollTop from 'src/components/ScrollTop'
 
 export interface IPageHeaderProps {
-    headerTitle: string,
-    children: React.ReactElement | React.ReactElement[];
+  headerTitle: string
+  children: React.ReactElement | React.ReactElement[]
 }
 
-export default function PageHeader(props: IPageHeaderProps) {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const navigate = useNavigate();
+export default function PageHeader (props: IPageHeaderProps): JSX.Element {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const navigate = useNavigate()
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget)
-    };
+  const handleMenu = (event: React.MouseEvent<HTMLElement>): void => {
+    setAnchorEl(event.currentTarget)
+  }
 
-    const handleClose = () => {
-        setAnchorEl(null)
-    };
+  const handleClose = (): void => {
+    setAnchorEl(null)
+  }
 
-    const handleMyAccount = () => {
-        navigate("/seller/1")
-        handleClose()
-    }
+  const handleMyAccount = (): void => {
+    navigate('/seller/1')
+    handleClose()
+  }
 
-    const handleHome = () => {
-        navigate("/")
-        handleClose()
-    }
-    return (
+  const handleHome = (): void => {
+    navigate('/')
+    handleClose()
+  }
+  return (
         <React.Fragment>
             <AppBar>
                 <Container>
@@ -64,13 +64,13 @@ export default function PageHeader(props: IPageHeaderProps) {
                             id="menu-appbar"
                             anchorEl={anchorEl}
                             anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
+                              vertical: 'top',
+                              horizontal: 'right'
                             }}
                             keepMounted
                             transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
+                              vertical: 'top',
+                              horizontal: 'right'
                             }}
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
@@ -90,5 +90,5 @@ export default function PageHeader(props: IPageHeaderProps) {
                 </Fab>
             </ScrollTop>
         </React.Fragment>
-    );
+  )
 }
