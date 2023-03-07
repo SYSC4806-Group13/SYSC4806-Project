@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material"
+import { Dialog, DialogTitle, DialogContent } from "@mui/material"
 
 export interface IDialogBoxProps {
     isDialogOpen: boolean,
