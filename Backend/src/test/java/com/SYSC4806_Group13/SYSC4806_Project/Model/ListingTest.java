@@ -1,8 +1,8 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Model;
 
 import com.SYSC4806_Group13.SYSC4806_Project.Sysc4806ProjectApplication;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -33,6 +33,8 @@ public class ListingTest {
         for (Listing listing : repo.findAll()) {
             Assertions.assertEquals("123", listing.getISBN());
         }
+
+        Assertions.assertNotNull(repo.findByListingId(l1.getListingId()));
 
         repo.deleteAll();
     }

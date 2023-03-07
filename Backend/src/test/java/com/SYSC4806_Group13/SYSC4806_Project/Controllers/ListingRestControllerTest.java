@@ -2,9 +2,9 @@ package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
 import com.SYSC4806_Group13.SYSC4806_Project.Model.ListingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.SYSC4806_Group13.SYSC4806_Project.StaticTestUtilities.APPLICATION_JSON_UTF8;
 import static com.SYSC4806_Group13.SYSC4806_Project.StaticTestUtilities.asJsonString;
@@ -62,6 +63,7 @@ public class ListingRestControllerTest {
         String publisher = "publisher";
         String description = "description";
         Integer inventory = 5;
+        Integer inventory2 = 500;
         String releaseDate = "05/08/22";
         String coverImage = "image url";
 
@@ -98,6 +100,7 @@ public class ListingRestControllerTest {
 
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
         Assertions.assertEquals(2, list.size());
+        Integer listing1_id = (Integer) ((Map<String, Object>) list.get(0)).get("listingId");
 
         // Get listings by sellerUserId
         result = mockMvc.perform(get("/listings?sellerUserId=123"))
@@ -108,9 +111,10 @@ public class ListingRestControllerTest {
         Assertions.assertEquals(1, list.size());
 
         // Update a listing
-        map.put("listingId", 1);
+        map.put("listingId", listing1_id);
         map.replace("title", title2);
         map.replace("price", price2);
+        map.replace("inventory", inventory2);
 
         mockMvc.perform(put("/listings")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -119,22 +123,23 @@ public class ListingRestControllerTest {
                 .andExpect(status().is2xxSuccessful());
 
         // Check if listing was updated
-        result = mockMvc.perform(get("/listings/1"))
+        result = mockMvc.perform(get("/listings/" + listing1_id))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
         Object updatedListing = mapper.readValue(result.getResponse().getContentAsString(), Object.class);
         Assertions.assertTrue(updatedListing.toString().contains("title=" + title2));
         Assertions.assertTrue(updatedListing.toString().contains("price=" + price2));
+        Assertions.assertTrue(updatedListing.toString().contains("inventory=" + inventory2));
 
         // Delete the listing
-        mockMvc.perform(delete("/listings/1")
+        mockMvc.perform(delete("/listings/" + listing1_id)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(asJsonString(map))
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure the deleted listing is now inactive
-        result = mockMvc.perform(get("/listings/1"))
+        result = mockMvc.perform(get("/listings/" + listing1_id))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
