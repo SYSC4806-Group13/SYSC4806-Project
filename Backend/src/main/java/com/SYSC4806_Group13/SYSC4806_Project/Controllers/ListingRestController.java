@@ -15,6 +15,8 @@ import java.util.Optional;
 
 import static com.SYSC4806_Group13.SYSC4806_Project.Controllers.ControllerValidationUtilities.*;
 
+
+@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RestController
 public class ListingRestController {
 
