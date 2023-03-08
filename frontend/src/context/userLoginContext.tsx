@@ -50,7 +50,7 @@ export function UserLoginProvider({ children }: { children: ReactNode }) {
     setToken(token);
     dispatch({
       type: "LOGIN",
-      payload: { isLoggedIn: true },
+      payload: { isLoggedIn: true, jwtToken: token },
     });
   };
 
