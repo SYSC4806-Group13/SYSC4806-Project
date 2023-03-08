@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.SYSC4806_Group13.SYSC4806_Project.Controllers.ControllerValidationUtilities.*;
+import static com.SYSC4806_Group13.SYSC4806_Project.Utilities.ControllerValidationUtilities.*;
 
 
-@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
+@CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @RestController
 public class ListingRestController {
 

@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.SYSC4806_Group13.SYSC4806_Project.Controllers.ControllerValidationUtilities.getValidatedAttribute_NonNull;
-import static com.SYSC4806_Group13.SYSC4806_Project.Controllers.ControllerValidationUtilities.getValidatedLongAttribute_positiveOnly;
+import static com.SYSC4806_Group13.SYSC4806_Project.Utilities.ControllerValidationUtilities.getValidatedAttribute_NonNull;
+import static com.SYSC4806_Group13.SYSC4806_Project.Utilities.ControllerValidationUtilities.getValidatedLongAttribute_positiveOnly;
 
 @RestController
 public class CartItemRestController {
