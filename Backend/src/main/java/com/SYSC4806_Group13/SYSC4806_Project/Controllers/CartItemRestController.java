@@ -1,50 +1,53 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
+import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.DuplicateException;
+import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.NotFoundException;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItem;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItemRepository;
-import org.springframework.http.HttpStatus;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.ListingRepository;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.SYSC4806_Group13.SYSC4806_Project.Utilities.ControllerValidationUtilities.getValidatedAttribute_NonNull;
+import static com.SYSC4806_Group13.SYSC4806_Project.Utilities.ControllerValidationUtilities.getValidatedLongAttribute_positiveOnly;
 
 @RestController
 public class CartItemRestController {
 
     private final CartItemRepository cartItemRepo;
+    private final ListingRepository listingRepo;
 
-    public CartItemRestController(CartItemRepository cartItemRepo) {
+    public CartItemRestController(CartItemRepository cartItemRepo, ListingRepository listingRepo) {
         this.cartItemRepo = cartItemRepo;
+        this.listingRepo = listingRepo;
     }
 
     @GetMapping("/cartItems")
-    public Object getUserCartItems(@RequestParam(value = "userID") long userID) {
-        return cartItemRepo.findAllByUserID(userID);
+    @ResponseBody()
+    public List<CartItem> getUserCartItems(@RequestParam(value = "userId") long userId) {
+        return cartItemRepo.findAllByUserId(userId);
     }
 
     @PostMapping("/cartItems")
     public Map<String, Object> postUserCartItem(@RequestBody Map<String, Long> payload) {
-        Long userID = payload.get("userID");
-        Long listingID = payload.get("listingID");
-        Long quantity = payload.get("quantity");
+        Long userId = (Long) getValidatedAttribute_NonNull("userId", payload.get("userId"));
+        Long listingId = (Long) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
+        Long quantity = getValidatedLongAttribute_positiveOnly("quantity", payload.get("quantity"), true);
 
-        if (userID == null || listingID == null || quantity == null) {
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expecting request body to include userID, listingID, quantity");
+        if (cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listingId) != null) {
+            throw new DuplicateException("A cartItem for this user and listing already exists");
         }
 
-        if (quantity <= 0) {
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be non-positive");
+        Listing listing = listingRepo.findByListingId(listingId);
+        if (listing == null) {
+            throw new NotFoundException("ListingId=" + listingId + " does not exist");
         }
 
-        if (cartItemRepo.findCartItemByUserIDAndListingID(userID, listingID) != null) {
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A cartItem for this user and listing already exists");
-        }
-
-        CartItem cartItem = new CartItem(userID, listingID, quantity);
+        CartItem cartItem = new CartItem(userId, listing, quantity);
         cartItemRepo.save(cartItem);
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -55,31 +58,19 @@ public class CartItemRestController {
 
     @PutMapping("/cartItems")
     public Map<String, Object> updateUserCartItem(@RequestBody Map<String, Long> payload) {
-        Long userID = payload.get("userID");
-        Long listingID = payload.get("listingID");
-        Long quantity = payload.get("quantity");
+        Long userId = (Long) getValidatedAttribute_NonNull("userId", payload.get("userId"));
+        Long listingId = (Long) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
+        Long quantity = getValidatedLongAttribute_positiveOnly("quantity", payload.get("quantity"), true);
 
-        if (userID == null || listingID == null || quantity == null) {
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expecting request body to include userID, listingID, quantity");
-        }
-
-        if (quantity <= 0) {
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity cannot be non-positive");
-        }
-
-        CartItem cartItemToUpdate = cartItemRepo.findCartItemByUserIDAndListingID(userID, listingID);
+        CartItem cartItemToUpdate = cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listingId);
         if (cartItemToUpdate == null) {
-            // No matching listingID for this user
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cartItems with listingID=" + listingID + " for userID=" + userID);
+            // No matching  for this user
+            throw new NotFoundException("No cartItems with listingId=" + listingId + " for userId=" + userId);
         }
 
         // only the quantity can be changed
         cartItemToUpdate.setQuantity(quantity);
         cartItemRepo.save(cartItemToUpdate);
-
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("cartItemId", cartItemToUpdate.getId());
@@ -89,19 +80,13 @@ public class CartItemRestController {
 
     @DeleteMapping("/cartItems")
     public Map<String, Object> deleteUserCartItem(@RequestBody Map<String, Long> payload) {
-        Long userID = payload.get("userID");
-        Long listingID = payload.get("listingID");
+        Long userId = (Long) getValidatedAttribute_NonNull("userId", payload.get("userId"));
+        Long listingId = (Long) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
 
-        if (userID == null || listingID == null) {
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Expecting request body to include userID, listingID");
-        }
-
-        CartItem cartItemToUpdate = cartItemRepo.findCartItemByUserIDAndListingID(userID, listingID);
+        CartItem cartItemToUpdate = cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listingId);
         if (cartItemToUpdate == null) {
-            // No matching listingID for this user
-            // TODO: Update with HG's exception system once it's in
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cartItems with listingID=" + listingID + " for userID=" + userID);
+            // No matching  for this user
+            throw new NotFoundException("No cartItems with listingId=" + listingId + " for userId=" + userId);
         }
 
         cartItemRepo.delete(cartItemToUpdate);
