@@ -13,7 +13,8 @@ export interface IListingCardProps {
     author: string,
     price: string,
     image: string,
-    alt: string
+    alt: string,
+    carousel?: boolean
 }
 
 export default function ListingCard (props: IListingCardProps) {
@@ -27,7 +28,7 @@ export default function ListingCard (props: IListingCardProps) {
           alt={props.alt}
           className="image"
         />
-        <CardContent>
+        {!props.carousel && <CardContent>
           <Typography variant="h3">
             {capitalize(props.cardName)}
           </Typography>
@@ -37,16 +38,16 @@ export default function ListingCard (props: IListingCardProps) {
           <Typography variant="h4" color="text.secondary">
             ${props.price}
           </Typography>
-        </CardContent>
+        </CardContent> }
       </CardActionArea>
-      <CardActions className='align-center'>
+      {!props.carousel && <CardActions className='align-center'>
         <Button size="large" color="success">
           <Typography variant="h6">
             Add to Cart
           </Typography>
           <AddShoppingCartIcon className='icon-spacing'/>
         </Button>
-      </CardActions>
+      </CardActions> }
     </Card>
   );
 }
