@@ -3,7 +3,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import { Grow, Paper } from '@mui/material';
+import { Grow, Paper, Typography } from '@mui/material';
 import ListingCard from 'src/components/Listing/ListingCard';
 import 'src/styles/Carousel.css'
 
@@ -37,6 +37,15 @@ export default function RecommendedCarousel(props: IRecommendedCarouselProps) {
             items: 1
         }
     };
+    const RightArrow = (arrowProps: any) => { const { carouselState, children, ...restArrowProps } = arrowProps; return (<ArrowForwardIosIcon fontSize='large' className='arrow right' {...restArrowProps} />); };
+    const LeftArrow = (arrowProps: any) => { const { carouselState, children, ...restArrowProps } = arrowProps; return (<ArrowBackIosNewIcon fontSize='large' className='arrow left' {...restArrowProps} />); };
+    if (props.listings.length === 0) {
+        return (
+            <Typography variant="h4" align='center' color='text.secondary' mt={2}>
+                No recommendations found
+            </Typography>
+        );
+    }
     return (
         <Carousel
             responsive={responsive}
@@ -44,8 +53,9 @@ export default function RecommendedCarousel(props: IRecommendedCarouselProps) {
             autoPlay={true}
             containerClass="carousel"
             itemClass="carousel-item"
-            customRightArrow={<ArrowForwardIosIcon  fontSize='large' className='arrow right' />}
-            customLeftArrow={<ArrowBackIosNewIcon fontSize='large' className='arrow left'/>}
+            rtl={false}
+            customRightArrow={<RightArrow />}
+            customLeftArrow={<LeftArrow />}
         >
             {props.listings.map(x => (
                 <Grow in={true} timeout={1000} key={x.cardName}>

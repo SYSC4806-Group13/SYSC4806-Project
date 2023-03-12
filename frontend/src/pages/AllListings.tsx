@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Typography, Divider } from '@mui/material';
+import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ListingGrid from "src/components/Listing/ListingGrid";
 import PageHeader from "src/components/PageHeader/PageHeader";
 import { LISTING } from "src/constants/endpoints";
@@ -22,17 +23,35 @@ export default function AllListings(props: IAllListingsProps) {
     }, [sendRequest]);
     return (
         <React.Fragment>
-            <PageHeader headerTitle="Listing">
-                <Typography gutterBottom variant="h3" align='center'>
-                    Recommendations
-                </Typography>
-                <Divider />
-                <RecommendedCarousel listings={listings} />
-                <Typography gutterBottom variant="h3" align='center'>
-                    Listings
-                </Typography>
-                <Divider />
-                <ListingGrid listings={listings} />
+            <PageHeader headerTitle='Listing'>
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography gutterBottom variant="h3" align='center'>
+                            Recommendations
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <RecommendedCarousel listings={listings} />
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography gutterBottom variant="h3" align='center'>
+                            Listings
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <ListingGrid listings={listings} />
+                    </AccordionDetails>
+                </Accordion>
             </PageHeader>
         </React.Fragment>
     );
