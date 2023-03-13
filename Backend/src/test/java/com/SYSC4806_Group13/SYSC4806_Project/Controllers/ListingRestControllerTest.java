@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -142,9 +143,10 @@ public class ListingRestControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Integer listingId = (Integer) ((Map<String, Object>) list.get(0)).get("listingId");
 
         // Check if listing was updated 6 was the autoincremeted result
-        result = mockMvc.perform(get("/listings/1")
+        result = mockMvc.perform(get("/listings/" + listingId)
                         .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -155,14 +157,14 @@ public class ListingRestControllerTest {
         Assertions.assertTrue(updatedListing.toString().contains("inventory=" + inventory2));
 
         // Delete the listing
-        mockMvc.perform(delete("/listings/1")
+        mockMvc.perform(delete("/listings/" + listingId)
                 .header("Authorization", "Bearer "+token)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(asJsonString(map))
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure the deleted listing is now inactive
-        result = mockMvc.perform(get("/listings/1")
+        result = mockMvc.perform(get("/listings/" + listingId)
                         .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();

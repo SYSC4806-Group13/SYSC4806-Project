@@ -18,26 +18,23 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @PatchMapping("/becomeSeller")
-    public Map becomeSeller(@CurrentUser UserPrincipal userPrincipal){
+    public Map becomeSeller(@CurrentUser UserPrincipal userPrincipal) {
         Map<String, String> response = new HashMap<>();
         User user = userRepository.findUserById(userPrincipal.getId());
-        if(user != null){
+        if (user != null) {
             user.setIsSeller(true);
             userRepository.save(user);
             response.put("id", userPrincipal.getId().toString());
             response.put("isSeller", "true");
-        }
-        else{
-            response.put("error",new ResourceNotFoundException("user", "id", userPrincipal.getId()).toString());
+        } else {
+            response.put("error", new ResourceNotFoundException("user", "id", userPrincipal.getId()).toString());
         }
         return response;
-
     }
 
 }

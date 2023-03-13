@@ -31,14 +31,16 @@ public class ApplicationSecurityTest {
     public void testProtectedEndpointWithInValidAuthentication() throws Exception {
         userUtil.setSuperUserInRepo();
         String token = userUtil.getSuperUserToken();
-        mockMvc.perform(get("/cartItems?userID=123").header("Authorization","Bearer "+"Sometoken"))
+        mockMvc.perform(get("/cartItems?userID=123")
+                        .header("Authorization","Bearer "+"Sometoken"))
                 .andExpect(status().is4xxClientError());
     }
     @Test
     public void testProtectedEndpointWithValidAuthentication() throws Exception {
         userUtil.setSuperUserInRepo();
         String token = userUtil.getSuperUserToken();
-        mockMvc.perform(get("/cartItems?userID=123").header("Authorization","Bearer "+token))
+        mockMvc.perform(get("/cartItems?userID=123")
+                        .header("Authorization","Bearer "+token))
                 .andExpect(status().is2xxSuccessful());
     }
 
