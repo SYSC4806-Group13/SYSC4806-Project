@@ -10,7 +10,7 @@ export const useHttpClient = () => {
   const { logOut } = useContext(UserLoginContext);
 
   const sendRequest = useCallback(
-    async (path = "", method: httpMethod = "GET", body: {}, headers = {}) => {
+    async (path = "", method: httpMethod = "GET", body: {}) => {
       setIsLoading(true);
 
       let requestHeaders = isAuthenticationNeeded(method, path)
@@ -40,6 +40,9 @@ export const useHttpClient = () => {
           case "PATCH":
             res = await axios.patch(url, body, config);
             break;
+          case "PUT":
+            res = await axios.put(url, body, config);
+            break;
           default:
             break;
         }
@@ -49,7 +52,6 @@ export const useHttpClient = () => {
         if (err.response.data.status === 401) {
           logOut();
         }
-        setError(err.response.data.message);
         setIsLoading(false);
         throw err;
       }

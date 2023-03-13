@@ -23,6 +23,7 @@ export default function SellerListings(props: ISellerListingsProps) {
 
   const [sellerItems, setSellerItems] = React.useState([]);
   const { sendRequest } = useHttpClient();
+
   React.useEffect(() => {
     const getSellerItems = async () => {
       let items = await sendRequest(LISTING, "GET", {});
