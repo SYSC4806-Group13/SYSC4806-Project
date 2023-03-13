@@ -3,9 +3,8 @@ package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.BadAttributeException;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.MissingAttributeException;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.NotFoundException;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.Listing;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.ListingRepository;
-
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
 import org.springframework.data.util.Streamable;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.SYSC4806_Group13.SYSC4806_Project.Utilities.ControllerValidationUtilities.*;
+
+
+@CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @RestController
 public class ListingRestController {
 
@@ -47,27 +50,18 @@ public class ListingRestController {
 
     @PostMapping("/listings")
     public Listing addListing(@RequestBody Map<String, Object> payload) {
+        Integer sellerUserId = (Integer) getValidatedAttribute_NonNull("sellerUserId", payload.get("sellerUserId"));
+        String title = getValidatedStringAttribute_NonNullNonBlank("title", (String) payload.get("title"));
+        String author = getValidatedStringAttribute_NonNullNonBlank("author", (String) payload.get("author"));
+        String publisher = getValidatedStringAttribute_NonNullNonBlank("publisher", (String) payload.get("publisher"));
+        String description = getValidatedStringAttribute_NonNullNonBlank("description", (String) payload.get("description"));
+        String releaseDate = getValidatedStringAttribute_NonNullNonBlank("releaseDate", (String) payload.get("releaseDate"));
+        String isbn = getValidatedStringAttribute_NonNullNonBlank("isbn", (String) payload.get("isbn"));
+        Integer inventory = getValidatedIntegerAttribute_positiveOnly("inventory", (Integer) payload.get("inventory"), true);
 
-        Integer sellerUserId = (Integer) payload.get("sellerUserId");
-        if (sellerUserId == null) {
-            throw new MissingAttributeException("Request body must contain 'sellerUserId'");
-        }
+        // TODO: Finalize approach to handle image storage. Consider FTP protocols with remote image hosting servers and saving links here
+        String coverImage = getValidatedStringAttribute_NonNullNonBlank("coverImage", (String) payload.get("coverImage"));
 
-        String isbn = (String) payload.get("isbn");
-        if (isbn == null) {
-            throw new MissingAttributeException("Request body must contain 'isbn'");
-        }
-        if (isbn.isBlank()) {
-            throw new BadAttributeException("Attribute 'isbn' cannot be empty");
-        }
-
-        String title = (String) payload.get("title");
-        if (title == null) {
-            throw new MissingAttributeException("Request body must contain 'title'");
-        }
-        if (title.isBlank()) {
-            throw new BadAttributeException("Attribute 'title' cannot be empty");
-        }
 
         Float floatPrice;
         try {
@@ -83,53 +77,6 @@ public class ListingRestController {
             throw new MissingAttributeException("Attribute 'price' must be formatted in decimal as a string (ex. '1.5')");
         }
 
-        String author = (String) payload.get("author");
-        if (author == null) {
-            throw new MissingAttributeException("Request body must contain 'author'");
-        }
-        if (author.isBlank()) {
-            throw new BadAttributeException("Attribute 'author' cannot be empty");
-        }
-
-        String publisher = (String) payload.get("publisher");
-        if (publisher == null) {
-            throw new MissingAttributeException("Request body must contain 'publisher'");
-        }
-        if (publisher.isBlank()) {
-            throw new BadAttributeException("Attribute 'publisher' cannot be empty");
-        }
-
-        String description = (String) payload.get("description");
-        if (description == null) {
-            throw new MissingAttributeException("Request body must contain 'description'");
-        }
-        if (description.isBlank()) {
-            throw new BadAttributeException("Attribute 'description' cannot be empty");
-        }
-
-        Integer inventory = (Integer) payload.get("inventory");
-        if (inventory == null) {
-            throw new MissingAttributeException("Request body must contain 'inventory'");
-        }
-        if (inventory < 0) {
-            throw new BadAttributeException("Attribute 'inventory' cannot be negative");
-        }
-
-        String releaseDate = (String) payload.get("releaseDate");
-        if (releaseDate == null) {
-            throw new MissingAttributeException("Request body must contain 'releaseDate'");
-        }
-        if (releaseDate.isBlank()) {
-            throw new BadAttributeException("Attribute 'releaseDate' cannot be empty");
-        }
-
-        String coverImage = (String) payload.get("coverImage");
-        if (coverImage == null) {
-            throw new MissingAttributeException("Request body must contain 'coverImage'");
-        }
-        if (coverImage.isBlank()) {
-            throw new BadAttributeException("Attribute 'coverImage' cannot be empty");
-        }
 
         Boolean isActive = true;
 
@@ -155,11 +102,7 @@ public class ListingRestController {
     @PutMapping("/listings")
     public Map<String, Object> putListing(@RequestBody Map<String, Object> payload) {
         Map<String, Object> map = new HashMap<>();
-
-        Integer listingId = (Integer) payload.get("listingId");
-        if (listingId == null) {
-            throw new MissingAttributeException("Request body must contain 'listingId'");
-        }
+        Integer listingId = (Integer) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
 
         Listing listing = repo.findByListingId(listingId.longValue());
 
@@ -167,21 +110,31 @@ public class ListingRestController {
             throw new NotFoundException("Listing with id [" + listingId + "] cannot be found");
         }
 
-        String isbn = (String) payload.get("isbn");
-        if (isbn != null) {
-            if (isbn.isBlank()) {
-                throw new BadAttributeException("Attribute 'isbn' cannot be empty");
-            }
-            listing.setISBN(isbn);
-            map.put("isbn", isbn);
+
+        if (setValidatedStringAttributeToMap("isbn", (String) payload.get("isbn"), map)) {
+            listing.setISBN((String) payload.get("isbn"));
         }
-        String title = (String) payload.get("title");
-        if (title != null) {
-            if (title.isBlank()) {
-                throw new BadAttributeException("Attribute 'title' cannot be empty");
-            }
-            listing.setTitle(title);
-            map.put("title", title);
+        if (setValidatedStringAttributeToMap("title", (String) payload.get("title"), map)) {
+            listing.setTitle((String) payload.get("title"));
+        }
+        if (setValidatedStringAttributeToMap("author", (String) payload.get("author"), map)) {
+            listing.setAuthor((String) payload.get("author"));
+        }
+        if (setValidatedStringAttributeToMap("publisher", (String) payload.get("publisher"), map)) {
+            listing.setPublisher((String) payload.get("publisher"));
+        }
+        if (setValidatedStringAttributeToMap("description", (String) payload.get("description"), map)) {
+            listing.setDescription((String) payload.get("description"));
+        }
+        if (setValidatedStringAttributeToMap("releaseDate", (String) payload.get("releaseDate"), map)) {
+            listing.setReleaseDate((String) payload.get("releaseDate"));
+        }
+        if (setValidatedIntegerAttributeToMap("inventory", (Integer) payload.get("inventory"), map, false)) {
+            listing.setInventory((Integer) payload.get("inventory"));
+        }
+        if (setValidatedStringAttributeToMap("coverImage", (String) payload.get("coverImage"), map)) {
+            // TODO: Finalize approach to handle image storage. Consider FTP protocols with remote image hosting servers and saving links here
+            listing.setCoverImage((String) payload.get("coverImage"));
         }
 
         try {
@@ -197,60 +150,6 @@ public class ListingRestController {
             }
         } catch (NumberFormatException | ClassCastException e) {
             throw new MissingAttributeException("Attribute 'price' must be formatted in decimal as a string (ex. '1.5')");
-        }
-
-
-        String author = (String) payload.get("author");
-        if (author != null) {
-            if (author.isBlank()) {
-                throw new BadAttributeException("Attribute 'author' cannot be empty");
-            }
-            listing.setAuthor(author);
-            map.put("author", author);
-        }
-
-        String publisher = (String) payload.get("publisher");
-        if (publisher != null) {
-            if (publisher.isBlank()) {
-                throw new BadAttributeException("Attribute 'publisher' cannot be empty");
-            }
-            listing.setPublisher(publisher);
-            map.put("publisher", publisher);
-        }
-
-        String description = (String) payload.get("description");
-        if (description != null) {
-            if (description.isBlank()) {
-                throw new BadAttributeException("Attribute 'description' cannot be empty");
-            }
-            listing.setDescription(description);
-            map.put("description", description);
-        }
-
-        Integer inventory = (Integer) payload.get("inventory");
-        if (inventory != null) {
-            if (inventory < 0) {
-                throw new BadAttributeException("Attribute 'inventory' cannot be negative");
-            }
-            listing.setInventory(inventory);
-            map.put("inventory", inventory);
-        }
-        String releaseDate = (String) payload.get("releaseDate");
-        if (releaseDate != null) {
-            if (releaseDate.isBlank()) {
-                throw new BadAttributeException("Attribute 'releaseDate' cannot be empty");
-            }
-            listing.setReleaseDate(releaseDate);
-            map.put("releaseDate", releaseDate);
-        }
-
-        String coverImage = (String) payload.get("coverImage");
-        if (coverImage != null) {
-            if (coverImage.isBlank()) {
-                throw new BadAttributeException("Attribute 'coverImage' cannot be empty");
-            }
-            listing.setCoverImage(coverImage);
-            map.put("coverImage", coverImage);
         }
 
         repo.save(listing);

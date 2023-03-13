@@ -1,9 +1,12 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
-import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.AuthenticationSuperUserUtil;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Security.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CartItemRestControllerTest {
 
     //Constants
-    private static final Long userID = 123L;
-    private static final Long listingID1 = 234L;
-    private static final Long listingID2 = 456L;
+    private static final Long userId = 123L;
     @Autowired
     private CartItemRestController restController;
     @Autowired
@@ -42,14 +43,19 @@ public class CartItemRestControllerTest {
     AuthenticationSuperUserUtil usersUtil;
     private String token;
 
+    private ListingRepository listingRepository;
+
     @BeforeEach
-    public void beforeEachTest() {
+    @AfterEach
+    public void betweenEachTest() {
         //Add the SuperUser and token
         usersUtil.setSuperUserInRepo();
         this.token = usersUtil.getSuperUserToken();
         // Reset the database to prevent tests from affecting each other
         cartItemRepository.deleteAll();
+        listingRepository.deleteAll();
     }
+
 
     @Test
     public void contextLoads() {
@@ -64,9 +70,13 @@ public class CartItemRestControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, Long> map = new HashMap<String, Long>();
 
+        long listingId1 = this.makeListingViaApiCall_returnListingId(123);
+        long listingId2 = this.makeListingViaApiCall_returnListingId(123);
+
+
         // Setup all the params
-        map.put("userID", userID);
-        map.put("listingID", listingID1);
+        map.put("userId", userId);
+        map.put("listingId", listingId1);
         map.put("quantity", 10L);
 
         // ADD LISTING ID 1
@@ -78,7 +88,7 @@ public class CartItemRestControllerTest {
                 .andExpect(status().is2xxSuccessful());
 
         // ADD LISTING ID 1
-        map.replace("listingID", listingID2);
+        map.replace("listingId", listingId2);
         mockMvc.perform(post("/cartItems")
                         .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
@@ -96,8 +106,8 @@ public class CartItemRestControllerTest {
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
         Assert.isTrue(list.size() == 2, "Wrong size response");
         for (Object ci : list) {
-            Assert.isTrue(ci.toString().contains("userID=123"), "Incorrect userID");
-            Assert.isTrue(ci.toString().contains("listingID="), "Incorrect listingID");
+            Assert.isTrue(ci.toString().contains("userId=123"), "Incorrect userId");
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
             Assert.isTrue(ci.toString().contains("quantity=10"), "Incorrect quantity");
         }
 
@@ -109,7 +119,7 @@ public class CartItemRestControllerTest {
                         .content(asJsonString(map))
                 )
                 .andExpect(status().is2xxSuccessful());
-        map.replace("listingID", listingID1);
+        map.replace("listingId", listingId1);
         mockMvc.perform(put("/cartItems")
                         .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
@@ -127,8 +137,8 @@ public class CartItemRestControllerTest {
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
         Assert.isTrue(list.size() == 2, "Wrong size response");
         for (Object ci : list) {
-            Assert.isTrue(ci.toString().contains("userID=123"), "Incorrect userID");
-            Assert.isTrue(ci.toString().contains("listingID="), "Incorrect listingID");
+            Assert.isTrue(ci.toString().contains("userId=123"), "Incorrect userId");
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
             Assert.isTrue(ci.toString().contains("quantity=2"), "Incorrect quantity");
         }
 
@@ -148,7 +158,7 @@ public class CartItemRestControllerTest {
         Assert.isTrue(list.size() == 1, "Wrong size response");
 
         // DELETE CART ITEM FOR LISTING ID 2
-        map.replace("listingID", listingID2);
+        map.replace("listingId", listingId2);
         mockMvc.perform(delete("/cartItems")
                 .header("Authorization", "Bearer " + token)
                 .contentType(APPLICATION_JSON_UTF8)
@@ -168,8 +178,8 @@ public class CartItemRestControllerTest {
     public void deleteCartItemsFails() throws Exception {
         // Need all the params
         HashMap<String, Long> map = new HashMap<String, Long>();
-        map.put("userID", userID);
-        map.put("listingID", listingID1);
+        map.put("userId", userId);
+        map.put("listingId", this.makeListingViaApiCall_returnListingId(123));
 
         // Can't delete non-existing cartItems
         mockMvc.perform(delete("/cartItems")
@@ -184,9 +194,10 @@ public class CartItemRestControllerTest {
     public void addAlreadyExistingCartItems() throws Exception {
         // Need all the params
         HashMap<String, Long> map = new HashMap<String, Long>();
-        map.put("userID", userID);
-        map.put("listingID", listingID1);
+        map.put("userId", userId);
+        map.put("listingId", this.makeListingViaApiCall_returnListingId(123));
         map.put("quantity", 10L);
+
 
         // First post OK
         mockMvc.perform(post("/cartItems")
@@ -210,8 +221,8 @@ public class CartItemRestControllerTest {
     public void changeCartItemsFails() throws Exception {
         // Need all the params
         HashMap<String, Long> map = new HashMap<String, Long>();
-        map.put("userID", userID);
-        map.put("listingID", listingID1);
+        map.put("userId", userId);
+        map.put("listingId", this.makeListingViaApiCall_returnListingId(123));
         // NO quantity param
         mockMvc.perform(put("/cartItems")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -219,10 +230,8 @@ public class CartItemRestControllerTest {
                 )
                 .andExpect(status().is4xxClientError());
 
-        // Can't change cart items that don't exist
-        map = new HashMap<String, Long>();
-        map.put("userID", userID);
-        map.put("listingID", listingID1);
+        // Can't change cart items that don't exist, even with quantity
+        map.replace("userId", 123456789L); //Invalid ID
         map.put("quantity", 10L);
         mockMvc.perform(put("/cartItems")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -237,14 +246,52 @@ public class CartItemRestControllerTest {
         mockMvc.perform(get("/cartItems"))
                 .andExpect(status().is4xxClientError());
 
-        // Only accepted q-param is userID case-sensitive
-        mockMvc.perform(get("/cartItems?userId=1"))
+        // Only accepted q-param is userId case-sensitive
+        mockMvc.perform(get("/cartItems?UserID=1"))
                 .andExpect(status().is4xxClientError());
         mockMvc.perform(get("/cartItems?badQueryParam=1"))
                 .andExpect(status().is4xxClientError());
 
-        // userID must be a long type
-        mockMvc.perform(get("/cartItems?userID=string"))
+        // userId must be a long type
+        mockMvc.perform(get("/cartItems?userId=string"))
                 .andExpect(status().is4xxClientError());
+    }
+
+
+    private long makeListingViaApiCall_returnListingId(Integer sellerUserId) throws Exception {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        String isbn = "123ABC";
+        String title = "title";
+        String price = "1.5";
+        String author = "author";
+        String publisher = "publisher";
+        String description = "description";
+        Integer inventory = 5;
+        String releaseDate = "05/08/22";
+        String coverImage = "image url";
+
+        map.put("sellerUserId", sellerUserId);
+        map.put("isbn", isbn);
+        map.put("title", title);
+        map.put("price", price);
+        map.put("author", author);
+        map.put("publisher", publisher);
+        map.put("description", description);
+        map.put("inventory", inventory);
+        map.put("releaseDate", releaseDate);
+        map.put("coverImage", coverImage);
+
+        // Create Listing 1
+        MvcResult result = mockMvc.perform(post("/listings")
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(result.getResponse().getContentAsByteArray(), Listing.class).getListingId();
+
     }
 }

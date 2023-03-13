@@ -21,4 +21,9 @@ public class ExceptionController {
     public ResponseEntity<Object> exception(BadAttributeException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = DuplicateException.class)
+    public ResponseEntity<Object> exception(DuplicateException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

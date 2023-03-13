@@ -1,7 +1,9 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Model;
 
 import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.CartItem;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,113 +12,112 @@ import org.springframework.util.Assert;
 @SpringBootTest
 public class CartItemModelTest {
     @Autowired
-    CartItemRepository repo;
+    CartItemRepository cartItemRepo;
+
+    @Autowired
+    ListingRepository listingRepo;
 
     @Test
     void cartItemPersistenceTest() {
-        repo.deleteAll();
+        cartItemRepo.deleteAll();
 
-        CartItem ci1 = new CartItem();
-        ci1.setUserID(123L);
-        ci1.setListingID(456L);
-        repo.save(ci1);
+        Listing listing = new Listing();
+        listingRepo.save(listing);
 
-        CartItem ci2 = new CartItem();
-        ci2.setUserID(123L);
-        ci2.setListingID(456L);
-        repo.save(ci2);
+        CartItem ci1 = new CartItem(123L, listing, 1L);
+        cartItemRepo.save(ci1);
 
-        Assert.isTrue(repo.count() == 2, "Extra data stored");
-        for (CartItem currentCartItem : repo.findAll()) {
-            Assert.isTrue(currentCartItem.getUserID().equals(123L), "Wrong User ID");
-            Assert.isTrue(currentCartItem.getListingID().equals(456L), "Wrong Listing ID");
+        CartItem ci2 = new CartItem(123L, listing, 1L);
+        cartItemRepo.save(ci2);
+
+        Assert.isTrue(cartItemRepo.count() == 2, "Extra data stored");
+        for (CartItem currentCartItem : cartItemRepo.findAll()) {
+            Assert.isTrue(currentCartItem.getUserId().equals(123L), "Wrong User ID");
+            Assert.isTrue(currentCartItem.getListing().getListingId().equals(listing.getListingId()), "Wrong Listing ID");
         }
 
-        repo.deleteAll();
+        cartItemRepo.deleteAll();
     }
 
     @Test
     void cartItemFindAllByUserIdTest() {
-        repo.deleteAll();
+        cartItemRepo.deleteAll();
         Long userId = 123L;
-        CartItem ci1 = new CartItem();
-        ci1.setUserID(userId);
-        ci1.setListingID(4561L);
-        repo.save(ci1);
 
-        CartItem ci2 = new CartItem();
-        ci2.setUserID(userId);
-        ci2.setListingID(4562L);
-        repo.save(ci2);
+        CartItem ci1 = new CartItem(userId, null, 1L);
+        cartItemRepo.save(ci1);
 
-        CartItem ci3 = new CartItem();
-        ci3.setUserID(3123L); //Different from previous 2
-        ci3.setListingID(4562L);
-        repo.save(ci3);
+        CartItem ci2 = new CartItem(userId, null, 1L);
+        cartItemRepo.save(ci2);
 
-        Assert.isTrue(repo.count() == 3, "Extra data stored");
-        for (CartItem currentCartItem : repo.findAllByUserID(userId)) {
-            Assert.isTrue(currentCartItem.getUserID().equals(userId), "Wrong User ID");
+        // Different from previous 2
+        CartItem ci3 = new CartItem(3123L, null, 1L);
+        cartItemRepo.save(ci3);
+
+        Assert.isTrue(cartItemRepo.count() == 3, "Extra data stored");
+        for (CartItem currentCartItem : cartItemRepo.findAllByUserId(userId)) {
+            Assert.isTrue(currentCartItem.getUserId().equals(userId), "Wrong User ID");
         }
 
-        repo.deleteAll();
+        cartItemRepo.deleteAll();
     }
 
     @Test
     void cartItemFindByUserIdAndListingIdTest() {
-        repo.deleteAll();
+        cartItemRepo.deleteAll();
 
         Long userId = 123L;
-        Long listingId = 456L;
 
-        CartItem ci1 = new CartItem();
-        ci1.setUserID(userId);
-        ci1.setListingID(24561L);
-        repo.save(ci1);
+        Listing listing1 = new Listing();
+        listingRepo.save(listing1);
+        Listing listing2 = new Listing();
+        listingRepo.save(listing2);
 
-        CartItem ci2 = new CartItem();
-        ci2.setUserID(userId);
-        ci2.setListingID(listingId);
-        repo.save(ci2);
-        Long id = ci2.getId();
+        CartItem ci1 = new CartItem(userId, listing1, 1L);
+        cartItemRepo.save(ci1);
+        Long id = ci1.getId();
 
-        CartItem ci3 = new CartItem();
-        ci3.setUserID(3123L); //Different from previous 2
-        ci3.setListingID(listingId);
-        repo.save(ci3);
+        // Different listing from previous
+        CartItem ci2 = new CartItem(userId, listing2, 1L);
+        cartItemRepo.save(ci2);
 
-        Assert.isTrue(repo.findCartItemByUserIDAndListingID(userId, listingId).getId().equals(id), "Wrong entry retrieved");
+        // Different from previous 2
+        CartItem ci3 = new CartItem(1234L, listing1, 1L);
+        cartItemRepo.save(ci3);
 
-        repo.deleteAll();
+        // Assert we get ci1 with userId=123L and listing1.id
+        Assert.isTrue(cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listing1.getListingId()).getId().equals(id), "Wrong entry retrieved");
+
+        cartItemRepo.deleteAll();
     }
 
     @Test
     void cartItemDeleteByUserIdAndListingIdTest() {
-        repo.deleteAll();
+        cartItemRepo.deleteAll();
 
         Long userId = 123L;
-        Long listingId = 456L;
 
-        CartItem ci1 = new CartItem();
-        ci1.setUserID(userId);
-        ci1.setListingID(24561L);
-        repo.save(ci1);
-
-        CartItem ci2 = new CartItem();
-        ci2.setUserID(userId);
-        ci2.setListingID(listingId);
-        repo.save(ci2);
-
-        CartItem ci3 = new CartItem();
-        ci3.setUserID(3123L); //Different from previous 2
-        ci3.setListingID(listingId);
-        repo.save(ci3);
-
-        Assert.isTrue(repo.count() == 3, "Wrong number of entries");
-        repo.delete(repo.findCartItemByUserIDAndListingID(userId, listingId));
-        Assert.isTrue(repo.count() == 2, "Wrong number of entries");
+        Listing listing1 = new Listing();
+        listingRepo.save(listing1);
+        Listing listing2 = new Listing();
+        listingRepo.save(listing2);
 
 
-        repo.deleteAll();
+        CartItem ci1 = new CartItem(userId, listing1, 1L);
+        cartItemRepo.save(ci1);
+
+        // Different listing
+        CartItem ci2 = new CartItem(userId, listing2, 1L);
+        cartItemRepo.save(ci2);
+
+        //Different user ID from previous 2
+        CartItem ci3 = new CartItem(1234L, listing1, 1L);
+        cartItemRepo.save(ci3);
+
+        Assert.isTrue(cartItemRepo.count() == 3, "Wrong number of entries");
+        cartItemRepo.delete(cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listing1.getListingId()));
+        Assert.isTrue(cartItemRepo.count() == 2, "Wrong number of entries");
+
+        cartItemRepo.deleteAll();
     }
 }
