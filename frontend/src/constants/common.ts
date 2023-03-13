@@ -10,3 +10,13 @@ export type userValue = {
   }
 
   export type userLoginContextState = userValue & userDispatch
+
+  export type httpAuthenticationURL = {
+    "GET": String[],
+    "POST": String[],
+    "DELETE": String[],
+    "PUT": String[],
+    "PATCH" :String[],
+  }
+
+  export type httpMethod = "GET" | "POST" | "DELETE" | "PUT" | "PATCH"

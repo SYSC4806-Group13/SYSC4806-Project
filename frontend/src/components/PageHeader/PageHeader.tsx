@@ -15,6 +15,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Container } from "@mui/system";
 import ScrollTop from "src/components/ScrollTop";
 import { UserLoginContext } from "src/context/userLoginContext";
+import { GOOGLE_AUTH_URL } from "src/constants/endpoints";
 
 export interface IPageHeaderProps {
   headerTitle: string;
@@ -24,7 +25,7 @@ export interface IPageHeaderProps {
 export default function PageHeader(props: IPageHeaderProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const { isLoggedIn, logIn, logOut } = useContext(UserLoginContext);
+  const { isLoggedIn, logOut } = useContext(UserLoginContext);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,12 +43,6 @@ export default function PageHeader(props: IPageHeaderProps) {
   const handleHome = () => {
     navigate("/");
     handleClose();
-  };
-
-  const handleLogin = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    logIn("Token");
-    return false;
   };
 
   const handleLogout = (e: React.MouseEvent<HTMLElement>) => {
@@ -78,13 +73,14 @@ export default function PageHeader(props: IPageHeaderProps) {
             </Typography>
             {/* TODO - Make this Log in button go to a page*/}
             {!isLoggedIn && (
-              <button
+              <a
+                href={GOOGLE_AUTH_URL}
+                rel="noopener noreferrer"
                 className="button"
-                onClick={handleLogin}
                 data-testid="login button"
               >
                 Log In
-              </button>
+              </a>
             )}
             {isLoggedIn && (
               <>

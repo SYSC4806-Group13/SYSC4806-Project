@@ -1,16 +1,19 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import axios from "axios";
 import { isAuthenticationNeeded } from "src/constants/endpoints";
+import { UserLoginContext } from "src/context/userLoginContext";
+import { httpMethod } from "src/constants/common";
 
 export const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { logOut } = useContext(UserLoginContext);
 
   const sendRequest = useCallback(
-    async (path = "", method = "GET", body: {}, headers = {}) => {
+    async (path = "", method: httpMethod = "GET", body: {}, headers = {}) => {
       setIsLoading(true);
 
-      let requestHeaders = isAuthenticationNeeded(path)
+      let requestHeaders = isAuthenticationNeeded(method, path)
         ? { Authorization: "Bearer " + localStorage.getItem("amazin_jwt") }
         : {};
 
@@ -43,12 +46,15 @@ export const useHttpClient = () => {
         setIsLoading(false);
         return res?.data;
       } catch (err: any) {
+        if (err.response.data.status === 401) {
+          logOut();
+        }
         setError(err.response.data.message);
         setIsLoading(false);
         throw err;
       }
     },
-    []
+    [logOut]
   );
 
   const clearError = () => {
