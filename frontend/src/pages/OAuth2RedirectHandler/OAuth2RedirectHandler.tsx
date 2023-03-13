@@ -17,7 +17,6 @@ const OAuth2RedirectHandler = () => {
   }
 
   const token = getUrlParameter("token");
-  const error = getUrlParameter("error");
 
   if (token) {
     logIn(token);
