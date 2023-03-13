@@ -1,5 +1,9 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Model;
 
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.CartItem;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

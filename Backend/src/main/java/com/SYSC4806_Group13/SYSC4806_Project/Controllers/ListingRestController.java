@@ -3,8 +3,10 @@ package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.BadAttributeException;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.MissingAttributeException;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.NotFoundException;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.Listing;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.ListingRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Security.CurrentUser;
+import com.SYSC4806_Group13.SYSC4806_Project.Security.UserPrincipal;
 import org.springframework.data.util.Streamable;
 import org.springframework.web.bind.annotation.*;
 

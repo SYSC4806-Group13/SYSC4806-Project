@@ -1,4 +1,4 @@
-package com.SYSC4806_Group13.SYSC4806_Project.Model;
+package com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
