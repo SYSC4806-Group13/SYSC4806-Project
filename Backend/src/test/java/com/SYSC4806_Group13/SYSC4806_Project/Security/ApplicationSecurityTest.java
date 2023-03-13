@@ -20,6 +20,7 @@ public class ApplicationSecurityTest {
     @Autowired
     AuthenticationSuperUserUtil userUtil;
 
+
     @Test
     public void testProtectedEndpointWithoutAuthentication() throws Exception {
         mockMvc.perform(get("/cartItems?userID=123"))

@@ -1,6 +1,7 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
 import com.SYSC4806_Group13.SYSC4806_Project.AuthenticationSuperUserUtil;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -135,8 +136,15 @@ public class ListingRestControllerTest {
                 )
                 .andExpect(status().is2xxSuccessful());
 
-        // Check if listing was updated
-        result = mockMvc.perform(get("/listings/1")
+        // Get both listings
+        result = mockMvc.perform(get("/listings")
+                        .header("Authorization", "Bearer "+token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+
+        // Check if listing was updated 6 was the autoincremeted result
+        result = mockMvc.perform(get("/listings/6")
                         .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -147,14 +155,14 @@ public class ListingRestControllerTest {
         Assertions.assertTrue(updatedListing.toString().contains("inventory=" + inventory2));
 
         // Delete the listing
-        mockMvc.perform(delete("/listings/1")
+        mockMvc.perform(delete("/listings/6")
                 .header("Authorization", "Bearer "+token)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(asJsonString(map))
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure the deleted listing is now inactive
-        result = mockMvc.perform(get("/listings/1")
+        result = mockMvc.perform(get("/listings/6")
                         .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();

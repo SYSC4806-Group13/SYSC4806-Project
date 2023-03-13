@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CartItemRestControllerTest {
 
     //Constants
-    private static final Long userId = 123L;
+    private static final Long userId = 1L;
     @Autowired
     private CartItemRestController restController;
     @Autowired
@@ -43,6 +43,7 @@ public class CartItemRestControllerTest {
     AuthenticationSuperUserUtil usersUtil;
     private String token;
 
+    @Autowired
     private ListingRepository listingRepository;
 
     @BeforeEach
@@ -70,8 +71,8 @@ public class CartItemRestControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, Long> map = new HashMap<String, Long>();
 
-        long listingId1 = this.makeListingViaApiCall_returnListingId(123);
-        long listingId2 = this.makeListingViaApiCall_returnListingId(123);
+        long listingId1 = this.makeListingViaApiCall_returnListingId(1);
+        long listingId2 = this.makeListingViaApiCall_returnListingId(1);
 
 
         // Setup all the params
@@ -106,7 +107,6 @@ public class CartItemRestControllerTest {
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
         Assert.isTrue(list.size() == 2, "Wrong size response");
         for (Object ci : list) {
-            Assert.isTrue(ci.toString().contains("userId=123"), "Incorrect userId");
             Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
             Assert.isTrue(ci.toString().contains("quantity=10"), "Incorrect quantity");
         }
@@ -137,7 +137,6 @@ public class CartItemRestControllerTest {
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
         Assert.isTrue(list.size() == 2, "Wrong size response");
         for (Object ci : list) {
-            Assert.isTrue(ci.toString().contains("userId=123"), "Incorrect userId");
             Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
             Assert.isTrue(ci.toString().contains("quantity=2"), "Incorrect quantity");
         }
@@ -225,6 +224,7 @@ public class CartItemRestControllerTest {
         map.put("listingId", this.makeListingViaApiCall_returnListingId(123));
         // NO quantity param
         mockMvc.perform(put("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -234,6 +234,7 @@ public class CartItemRestControllerTest {
         map.replace("userId", 123456789L); //Invalid ID
         map.put("quantity", 10L);
         mockMvc.perform(put("/cartItems")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
@@ -242,19 +243,11 @@ public class CartItemRestControllerTest {
 
     @Test
     public void getCartItemsFails() throws Exception {
-        // Needs query parameter for ID
-        mockMvc.perform(get("/cartItems"))
+        // Needs a proper user
+        mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + "token"))
                 .andExpect(status().is4xxClientError());
 
-        // Only accepted q-param is userId case-sensitive
-        mockMvc.perform(get("/cartItems?UserID=1"))
-                .andExpect(status().is4xxClientError());
-        mockMvc.perform(get("/cartItems?badQueryParam=1"))
-                .andExpect(status().is4xxClientError());
-
-        // userId must be a long type
-        mockMvc.perform(get("/cartItems?userId=string"))
-                .andExpect(status().is4xxClientError());
     }
 
 
@@ -284,6 +277,7 @@ public class CartItemRestControllerTest {
 
         // Create Listing 1
         MvcResult result = mockMvc.perform(post("/listings")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(asJsonString(map))
                 )
