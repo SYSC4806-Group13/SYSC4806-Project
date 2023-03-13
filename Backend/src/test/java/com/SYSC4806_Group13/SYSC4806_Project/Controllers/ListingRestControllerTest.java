@@ -144,7 +144,7 @@ public class ListingRestControllerTest {
         list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
 
         // Check if listing was updated 6 was the autoincremeted result
-        result = mockMvc.perform(get("/listings/6")
+        result = mockMvc.perform(get("/listings/1")
                         .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -155,14 +155,14 @@ public class ListingRestControllerTest {
         Assertions.assertTrue(updatedListing.toString().contains("inventory=" + inventory2));
 
         // Delete the listing
-        mockMvc.perform(delete("/listings/6")
+        mockMvc.perform(delete("/listings/1")
                 .header("Authorization", "Bearer "+token)
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(asJsonString(map))
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure the deleted listing is now inactive
-        result = mockMvc.perform(get("/listings/6")
+        result = mockMvc.perform(get("/listings/1")
                         .header("Authorization", "Bearer "+token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
