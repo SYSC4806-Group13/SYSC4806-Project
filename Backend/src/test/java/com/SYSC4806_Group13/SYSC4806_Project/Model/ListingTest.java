@@ -26,7 +26,6 @@ public class ListingTest {
         l1.setInventory(3);
         l1.setReleaseDate("date");
         l1.setActive(true);
-        l1.setCoverImage("test url");
         repo.save(l1);
 
         Assertions.assertEquals(1, repo.count());
@@ -54,7 +53,6 @@ public class ListingTest {
         l1.setInventory(3);
         l1.setReleaseDate("date");
         l1.setActive(true);
-        l1.setCoverImage("test url");
         repo.save(l1);
 
         Assertions.assertEquals(1, repo.count());

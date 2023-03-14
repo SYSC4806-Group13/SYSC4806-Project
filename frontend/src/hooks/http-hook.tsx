@@ -5,10 +5,11 @@ export const useHttpClient = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const host = "http://localhost:8080";
+
     const sendRequest = useCallback(
         async (path = "", method = "GET", body : {}, headers = {}) => {
             setIsLoading(true);
-            const host = "http://localhost:8080"
             const url = host + path;
             let res = null;
             try {
@@ -43,5 +44,5 @@ export const useHttpClient = () => {
         setError(null);
     };
 
-    return { isLoading, error, sendRequest, clearError };
+    return { host, isLoading, error, sendRequest, clearError };
 };

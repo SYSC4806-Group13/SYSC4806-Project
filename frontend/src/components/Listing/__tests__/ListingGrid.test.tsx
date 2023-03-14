@@ -24,9 +24,9 @@ test('one listing', async () => {
   (axios.get as jest.Mock).mockResolvedValue({
     data: [{
       cardName: "Test Card",
+      listingId: 1,
       author: "test",
       price: "test",
-      image: "test",
       alt: "test"
     }]
   })

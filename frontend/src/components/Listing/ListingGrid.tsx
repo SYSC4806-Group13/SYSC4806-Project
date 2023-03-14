@@ -8,8 +8,8 @@ export interface IListingGridProps {
     listings: Array<{
         cardName: string,
         author: string,
+        listingId: number,
         price: string,
-        image: string,
         alt: string
     }>
 }
@@ -30,7 +30,7 @@ export default function ListingGrid(props: IListingGridProps) {
                         <Grid item xs={1} sm={4} md={4} key={uuidv4()}>
                             <Grow in={true} timeout={1000}>
                                 <Paper>
-                                    <ListingCard cardName={x.cardName} author={x.author} price={x.price} image={x.image} alt={x.alt}/>
+                                    <ListingCard cardName={x.cardName} listingId={x.listingId} author={x.author} price={x.price} alt={x.alt}/>
                                 </Paper>
                             </Grow>
                         </Grid>
