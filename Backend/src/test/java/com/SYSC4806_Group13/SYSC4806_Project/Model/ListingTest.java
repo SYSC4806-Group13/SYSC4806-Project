@@ -1,5 +1,7 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Model;
 
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Sysc4806ProjectApplication;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

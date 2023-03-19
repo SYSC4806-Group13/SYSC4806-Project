@@ -2,10 +2,12 @@ package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.DuplicateException;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.NotFoundException;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItem;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.CartItemRepository;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.Listing;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.ListingRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.CartItem;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
+import com.SYSC4806_Group13.SYSC4806_Project.Security.CurrentUser;
+import com.SYSC4806_Group13.SYSC4806_Project.Security.UserPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,13 +30,13 @@ public class CartItemRestController {
 
     @GetMapping("/cartItems")
     @ResponseBody()
-    public List<CartItem> getUserCartItems(@RequestParam(value = "userId") long userId) {
-        return cartItemRepo.findAllByUserId(userId);
+    public List<CartItem> getUserCartItems(@CurrentUser UserPrincipal userPrincipal) {
+        return cartItemRepo.findAllByUserId(userPrincipal.getId());
     }
 
     @PostMapping("/cartItems")
-    public Map<String, Object> postUserCartItem(@RequestBody Map<String, Long> payload) {
-        Long userId = (Long) getValidatedAttribute_NonNull("userId", payload.get("userId"));
+    public Map<String, Object> postUserCartItem(@RequestBody Map<String, Long> payload, @CurrentUser UserPrincipal userPrincipal) {
+        Long userId = (Long) getValidatedAttribute_NonNull("userId", userPrincipal.getId());
         Long listingId = (Long) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
         Long quantity = getValidatedLongAttribute_positiveOnly("quantity", payload.get("quantity"), true);
 
@@ -57,8 +59,8 @@ public class CartItemRestController {
     }
 
     @PutMapping("/cartItems")
-    public Map<String, Object> updateUserCartItem(@RequestBody Map<String, Long> payload) {
-        Long userId = (Long) getValidatedAttribute_NonNull("userId", payload.get("userId"));
+    public Map<String, Object> updateUserCartItem(@RequestBody Map<String, Long> payload, @CurrentUser UserPrincipal userPrincipal) {
+        Long userId = (Long) getValidatedAttribute_NonNull("userId", userPrincipal.getId());
         Long listingId = (Long) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
         Long quantity = getValidatedLongAttribute_positiveOnly("quantity", payload.get("quantity"), true);
 
@@ -79,8 +81,8 @@ public class CartItemRestController {
     }
 
     @DeleteMapping("/cartItems")
-    public Map<String, Object> deleteUserCartItem(@RequestBody Map<String, Long> payload) {
-        Long userId = (Long) getValidatedAttribute_NonNull("userId", payload.get("userId"));
+    public Map<String, Object> deleteUserCartItem(@RequestBody Map<String, Long> payload, @CurrentUser UserPrincipal userPrincipal) {
+        Long userId = (Long) getValidatedAttribute_NonNull("userId", userPrincipal.getId());
         Long listingId = (Long) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
 
         CartItem cartItemToUpdate = cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listingId);

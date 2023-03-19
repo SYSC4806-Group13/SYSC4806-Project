@@ -32,5 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
+### Application Env Vars ##
+application.yml
+application.properties
+
 ### Local File ###
 /covers/
