@@ -48,6 +48,8 @@ public class CoverRestController {
             if (!isSupportedContentType(imageFile.getContentType())) {
                 throw new InvalidFileTypeException("File can only be of type: [png, jpg, jpeg]");
             }
+        } else {
+            throw new InvalidFileTypeException("File can only be of type: [png, jpg, jpeg]");
         }
 
         try {
@@ -92,14 +94,11 @@ public class CoverRestController {
     }
 
     private String contentTypeToFileTypeMapping(String contentType) {
-        switch (contentType) {
-            case "image/png":
-                return ".png";
-            case "image/jpg", "image/jpeg":
-                return ".jpg";
-            default:
-                return "";
-        }
+        return switch (contentType) {
+            case "image/png" -> ".png";
+            case "image/jpg", "image/jpeg" -> ".jpg";
+            default -> "";
+        };
     }
 
     private boolean isSupportedContentType(String contentType) {
