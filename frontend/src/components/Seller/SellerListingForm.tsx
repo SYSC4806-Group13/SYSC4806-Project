@@ -8,9 +8,14 @@ import { LISTING } from "src/constants/endpoints";
 export interface ISellerListingFormProps {
   handleCloseDialog: () => void;
   sellerId: string | undefined;
+
+   isEdit : boolean;
+
+   formValues? : IFormInput;
 }
 
-interface IFormInput {
+
+export interface IFormInput {
   isbn: string;
   title: string;
   author: string;
@@ -19,20 +24,22 @@ interface IFormInput {
   inventory: number;
   price: number;
   releaseDate: string;
+  listingId?: string;
 }
 
 export default function SellerListingForm(props: ISellerListingFormProps) {
   const defaultValues = {
     sellerUserId: props.sellerId,
-    isbn: "",
-    title: "",
-    author: "",
-    publisher: "",
-    description: "",
-    inventory: 0,
-    price: 0.0,
+    isbn:props.formValues && props.isEdit ?  props.formValues?.isbn : "",
+    title:props.formValues && props.isEdit ? props.formValues?.title : "",
+    author:props.formValues && props.isEdit ? props.formValues?.author : "",
+    publisher:props.formValues && props.isEdit ? props.formValues?.publisher : "",
+    description:props.formValues && props.isEdit ? props.formValues?.description : "",
+    inventory:props.formValues && props.isEdit ? props.formValues?.inventory : 0,
+    price:props.formValues && props.isEdit ? props.formValues?.price : 0.0,
     releaseDate: new Date().toISOString().slice(0, 10),
   };
+
   const { sendRequest } = useHttpClient();
   const formMethods = useForm({ defaultValues });
   const {
@@ -40,15 +47,38 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
     control,
     formState: { errors },
   } = formMethods;
+
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const dataCopy = JSON.parse(JSON.stringify(data));
-    dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId);
-    dataCopy.price = parseFloat(dataCopy.price).toFixed(2);
-    dataCopy.inventory = parseInt(dataCopy.inventory);
-    dataCopy.coverImage = "/static/images/book-cover.jpg";
-    await sendRequest(LISTING, "POST", dataCopy);
-    props.handleCloseDialog();
+      if(props.isEdit)
+      {
+          const dataCopy = JSON.parse(JSON.stringify(data));
+          dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId);
+          dataCopy.price = parseFloat(dataCopy.price).toFixed(2);
+          dataCopy.inventory = parseInt(dataCopy.inventory);
+          dataCopy.coverImage = "/static/images/book-cover.jpg";
+          if(props.formValues?.listingId)
+            dataCopy.listingId = parseInt(props.formValues.listingId);
+
+          await sendRequest(LISTING, "PUT", dataCopy);
+          props.handleCloseDialog();
+          window.location.reload();
+      }
+      else
+      {
+          const dataCopy = JSON.parse(JSON.stringify(data));
+          dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId);
+          dataCopy.price = parseFloat(dataCopy.price).toFixed(2);
+          dataCopy.inventory = parseInt(dataCopy.inventory);
+          dataCopy.coverImage = "/static/images/book-cover.jpg";
+          await sendRequest(LISTING, "POST", dataCopy);
+          props.handleCloseDialog();
+      }
+
   };
+  //Another function that deal with patch, endpoint so be there, front end call to that
+    // The form on sumbit, need to differenetiate between new and edit (isEdit? edit ; onSubmit)
+    //Or do it in the function
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <CustomTextField

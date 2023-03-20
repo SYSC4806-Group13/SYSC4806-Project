@@ -50,11 +50,12 @@ export default function SellerListings(props: ISellerListingsProps) {
       <DialogBox
         isDialogOpen={addListingDialog}
         handleCloseDialog={closeDialog}
+        title = "Add Listing"
       >
         <SellerListingForm
           handleCloseDialog={closeDialog}
           sellerId={sellerId}
-        />
+          isEdit={false}/>
       </DialogBox>
     </PageHeader>
   );

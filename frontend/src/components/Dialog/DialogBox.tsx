@@ -5,9 +5,12 @@ export interface IDialogBoxProps {
     isDialogOpen: boolean,
     handleCloseDialog: () => void,
     children?: React.ReactElement | React.ReactElement[]
+
+    title : string
+
 }
 
-export default function DialogBox(props: IDialogBoxProps) {
+export default function DialogBox(props:IDialogBoxProps) {
     const [open, setOpen] = React.useState(false);
 
     React.useEffect(() => {
@@ -21,7 +24,7 @@ export default function DialogBox(props: IDialogBoxProps) {
     };
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Add Listing</DialogTitle>
+            <DialogTitle>{props.title}</DialogTitle>
             <DialogContent>
                 {props.children}
             </DialogContent>
