@@ -6,6 +6,8 @@ import { UserLoginContext } from "src/context/userLoginContext";
 import ProtectedPage from "./pages/ProtectedPage/ProtectedPage";
 import UnAuthorizedPage from "./pages/UnAuthorizedPage/UnAuthorizedPage";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler/OAuth2RedirectHandler";
+import Profile from "./pages/Profile/Profile";
+import Login from "./pages/Login/Login";
 
 export default function App() {
   const { isLoggedIn } = useContext(UserLoginContext);
@@ -21,7 +23,13 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<AllListings />} />
-        <Route path="/seller/:sellerId" element={<SellerListings />} />
+        <Route
+          path="/seller/:sellerId"
+          element={isLoggedInRouteAccess(
+            <SellerListings />,
+            <UnAuthorizedPage />
+          )}
+        />
         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         <Route
           path="/protected"
@@ -30,6 +38,11 @@ export default function App() {
             <UnAuthorizedPage />
           )}
         />
+        <Route
+          path="/profile"
+          element={isLoggedInRouteAccess(<Profile />, <UnAuthorizedPage />)}
+        />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

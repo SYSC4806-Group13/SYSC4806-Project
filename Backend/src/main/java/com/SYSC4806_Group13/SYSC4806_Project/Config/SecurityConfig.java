@@ -86,9 +86,11 @@ public class SecurityConfig   {
                         "/*/*.css",
                         "/*/*.js")
                 .permitAll()
-                .requestMatchers("/auth/**", "/oauth2/**") //End points for dealing with auth2
-                .permitAll()
+                .and()
+                .authorizeRequests()
                 .requestMatchers(HttpMethod.GET, "/listings")
+                .permitAll()
+                .requestMatchers("/auth/**", "/oauth2/**") //End points for dealing with auth2
                 .permitAll()
                 .anyRequest()
                 .authenticated()

@@ -8,6 +8,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Button,
 } from "@mui/material";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -15,7 +16,6 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Container } from "@mui/system";
 import ScrollTop from "src/components/ScrollTop";
 import { UserLoginContext } from "src/context/userLoginContext";
-import { GOOGLE_AUTH_URL } from "src/constants/endpoints";
 
 export interface IPageHeaderProps {
   headerTitle: string;
@@ -51,6 +51,11 @@ export default function PageHeader(props: IPageHeaderProps) {
     handleClose();
   };
 
+  const handleMyProfile = (e: React.MouseEvent<HTMLElement>) => {
+    navigate("/profile");
+    handleClose();
+  };
+
   return (
     <React.Fragment>
       <AppBar>
@@ -73,14 +78,14 @@ export default function PageHeader(props: IPageHeaderProps) {
             </Typography>
             {/* TODO - Make this Log in button go to a page*/}
             {!isLoggedIn && (
-              <a
-                href={GOOGLE_AUTH_URL}
-                rel="noopener noreferrer"
-                className="button"
-                data-testid="login button"
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
+                onClick={() => navigate("/login")}
               >
-                Log In
-              </a>
+                Login
+              </Button>
             )}
             {isLoggedIn && (
               <>
@@ -110,6 +115,7 @@ export default function PageHeader(props: IPageHeaderProps) {
                   onClose={handleClose}
                 >
                   <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
+                  <MenuItem onClick={handleMyProfile}>My Profile</MenuItem>
                   <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                 </Menu>
               </>

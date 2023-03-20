@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserLoginContext } from "src/context/userLoginContext";
 
@@ -16,14 +16,17 @@ const OAuth2RedirectHandler = () => {
       : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
-  const token = getUrlParameter("token");
+  useEffect(() => {
+    const token = getUrlParameter("token");
+    if (token) {
+      logIn(token);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, [logIn, navigate]);
 
-  if (token) {
-    logIn(token);
-    return <>{navigate("/")}</>;
-  } else {
-    return <>{navigate("/")}</>;
-  }
+  return <></>;
 };
 
 export default OAuth2RedirectHandler;
