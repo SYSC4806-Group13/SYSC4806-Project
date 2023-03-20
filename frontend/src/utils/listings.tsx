@@ -13,6 +13,7 @@ export const buildListings = (items :any) => {
             releaseDate: e.releaseDate,
             title: e.title,
             alt: 'No image found'
+
         }
     })
     return items
