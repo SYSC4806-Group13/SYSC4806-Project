@@ -12,11 +12,11 @@ export type userValue = {
   export type userLoginContextState = userValue & userDispatch
 
   export type httpAuthenticationURL = {
-    "GET": String[],
-    "POST": String[],
-    "DELETE": String[],
-    "PUT": String[],
-    "PATCH" :String[],
+    "GET": string[],
+    "POST": string[],
+    "DELETE": string[],
+    "PUT": string[],
+    "PATCH" : string[],
   }
 
   export type httpMethod = "GET" | "POST" | "DELETE" | "PUT" | "PATCH"

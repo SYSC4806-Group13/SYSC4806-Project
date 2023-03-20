@@ -29,47 +29,47 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
     author: "",
     publisher: "",
     description: "",
-    inventory: 0,
+    inventory: 1,
     price: 0.0,
     releaseDate: new Date().toISOString().slice(0, 10),
   };
 
-    const [coverFile, setCoverFile] = React.useState<File>();
-    const [isFileValidated, setIsFileValidated] = React.useState<boolean>(true);
+  const [coverFile, setCoverFile] = React.useState<File>();
+  const [isFileValidated, setIsFileValidated] = React.useState<boolean>(true);
 
   const { sendRequest } = useHttpClient();
   const formMethods = useForm({ defaultValues });
   const {
-      handleSubmit,
-      control,
-      formState: { errors },
+    handleSubmit,
+    control,
+    formState: { errors },
   } = formMethods;
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-      if (!!!isFileValidated) {
-          return;
-      }
-      const dataCopy = JSON.parse(JSON.stringify(data));
-      dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId);
-      dataCopy.price = parseFloat(dataCopy.price).toFixed(2);
-      dataCopy.inventory = parseInt(dataCopy.inventory);
-      const listing : any = await sendRequest(LISTING, "POST", dataCopy);
-      const formData:any = new FormData();
-      formData.append("imageFile", coverFile);
-      await sendRequest("/covers/" + listing.listingId, "POST", formData);
-      props.handleCloseDialog();
+    if (!!!isFileValidated) {
+      return;
+    }
+    const dataCopy = JSON.parse(JSON.stringify(data));
+    dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId);
+    dataCopy.price = parseFloat(dataCopy.price).toFixed(2);
+    dataCopy.inventory = parseInt(dataCopy.inventory);
+    const listing: any = await sendRequest(LISTING, "POST", dataCopy);
+    const formData: any = new FormData();
+    formData.append("imageFile", coverFile);
+    await sendRequest("/covers/" + listing.listingId, "POST", formData);
+    props.handleCloseDialog();
   };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const validContentTypes = ["image/jpg", "image/jpeg", "image/png"];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const validContentTypes = ["image/jpg", "image/jpeg", "image/png"];
 
-        if (!e.target.files) return;
-        if (!validContentTypes.includes(e.target.files[0].type)) {
-            setIsFileValidated(false);
-            return;
-        }
-        setIsFileValidated(true);
-        setCoverFile(e.target.files[0]);
-    };
+    if (!e.target.files) return;
+    if (!validContentTypes.includes(e.target.files[0].type)) {
+      setIsFileValidated(false);
+      return;
+    }
+    setIsFileValidated(true);
+    setCoverFile(e.target.files[0]);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -115,7 +115,7 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
         name="inventory"
         number
         notFull
-        minVal={0}
+        minVal={1}
         control={control}
         required
         errors={errors}
@@ -139,11 +139,18 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
         required
         errors={errors}
       />
-      <Typography variant='h6'> Upload Cover Image </Typography>
-      {!isFileValidated && <Typography color={'red'}> Invalid File Type. Must be [png, jpg, jpeg] </Typography>}
-      <input required type='file'
-             accept='.png, .jpg, .jpeg'
-             onChange={handleFileChange}
+      <Typography variant="h6"> Upload Cover Image </Typography>
+      {!isFileValidated && (
+        <Typography color={"red"}>
+          {" "}
+          Invalid File Type. Must be [png, jpg, jpeg]{" "}
+        </Typography>
+      )}
+      <input
+        required
+        type="file"
+        accept=".png, .jpg, .jpeg"
+        onChange={handleFileChange}
       />
       <DialogActions>
         <Button onClick={props.handleCloseDialog} color="error">

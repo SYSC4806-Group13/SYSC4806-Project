@@ -8,6 +8,7 @@ import DialogBox from "src/components/Dialog/DialogBox";
 import SellerListingForm from "src/components/Seller/SellerListingForm";
 import { useHttpClient } from "src/hooks/http-hook";
 import { buildListings } from "src/utils/listings";
+import { UserLoginContext } from "src/context/userLoginContext";
 import "src/styles/SellerListing.css";
 import { LISTING } from "src/constants/endpoints";
 
@@ -23,6 +24,7 @@ export default function SellerListings(props: ISellerListingsProps) {
 
   const [sellerItems, setSellerItems] = React.useState([]);
   const { sendRequest } = useHttpClient();
+  const { isLoggedIn } = React.useContext(UserLoginContext);
 
   React.useEffect(() => {
     const getSellerItems = async () => {
@@ -35,27 +37,34 @@ export default function SellerListings(props: ISellerListingsProps) {
 
   return (
     <PageHeader headerTitle="Seller Listings">
-      <Box textAlign={"center"} mt={2}>
-        <Button
-          variant="contained"
-          color="success"
-          size="large"
-          className="button"
-          onClick={handleAddListing}
-        >
-          Add Listing <AddIcon fontSize="large" />
-        </Button>
-      </Box>
+      <>
+        {isLoggedIn && (
+          <>
+            <Box textAlign={"center"} mt={2}>
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
+                className="button"
+                onClick={handleAddListing}
+              >
+                Add Listing <AddIcon fontSize="large" />
+              </Button>
+            </Box>
+            <DialogBox
+              isDialogOpen={addListingDialog}
+              handleCloseDialog={closeDialog}
+            >
+              <SellerListingForm
+                handleCloseDialog={closeDialog}
+                sellerId={sellerId}
+              />
+            </DialogBox>
+          </>
+        )}
+      </>
+
       <ListingGrid listings={sellerItems} />
-      <DialogBox
-        isDialogOpen={addListingDialog}
-        handleCloseDialog={closeDialog}
-      >
-        <SellerListingForm
-          handleCloseDialog={closeDialog}
-          sellerId={sellerId}
-        />
-      </DialogBox>
     </PageHeader>
   );
 }
