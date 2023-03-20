@@ -1,36 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import PageHeader from "src/components/PageHeader/PageHeader";
 import { BECOME_SELLER, PROFILE } from "src/constants/endpoints";
-import { profileType } from "src/constants/common";
 import { useHttpClient } from "src/hooks/http-hook";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 
 import style from "./Profile.module.css";
+import { UserLoginContext } from "src/context/userLoginContext";
+import { profileType } from "src/constants/common";
 
 export default function Profile() {
   const { sendRequest } = useHttpClient();
-  const [profile, setProfile] = useState<profileType>();
-  const [funcSet, setFunc] = useState(false);
+
   const navigate = useNavigate();
+  const { profile, setProfile } = useContext(UserLoginContext);
 
-  useEffect(() => {
-    const getProfile = async () => {
-      let profile: profileType = await sendRequest(PROFILE, "GET", {});
-      setProfile(profile);
-    };
+  const becomeSeller = async () => {
+    await sendRequest(BECOME_SELLER, "PATCH", {});
     getProfile();
-  }, [sendRequest]);
+  };
 
-  useEffect(() => {
-    const becomeSeller = async () => {
-      await sendRequest(BECOME_SELLER, "PATCH", {});
-      window.location.reload();
-    };
-    if (funcSet) {
-      becomeSeller();
-    }
-  }, [funcSet, sendRequest]);
+  const getProfile = async () => {
+    let profile1: profileType = await sendRequest(PROFILE, "GET", {});
+    setProfile(profile1);
+  };
+
+  console.log(profile);
 
   return (
     <PageHeader headerTitle="Profile">
@@ -48,7 +43,7 @@ export default function Profile() {
                   color="success"
                   size="large"
                   className={style.button}
-                  onClick={() => setFunc(true)}
+                  onClick={() => becomeSeller()}
                 >
                   Become a Seller
                 </Button>

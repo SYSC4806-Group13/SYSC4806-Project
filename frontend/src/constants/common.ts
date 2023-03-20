@@ -1,12 +1,14 @@
 export type userValue = {
   isLoggedIn: boolean | null;
   jwtToken: string | undefined;
+  profile: profileType;
 };
 
 export type userDispatch = {
   logOut: () => void;
   logIn: (token: string) => void;
   setToken: (token: string) => void;
+  setProfile: (profile: profileType) => void;
 };
 
 export type userLoginContextState = userValue & userDispatch;

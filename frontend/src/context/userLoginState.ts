@@ -1,38 +1,42 @@
-import { userValue } from '../constants/common'
+import { userValue } from "../constants/common";
 
-const isLoggedLS = localStorage.getItem('amazin_jwt')
+const isLoggedLS = localStorage.getItem("amazin_jwt");
 
 export const initialState = {
   isLoggedIn: isLoggedLS ? true : false,
-  jwtToken: '',
-}
+  jwtToken: "",
+};
 
 type LogIn = {
-  type: 'LOGIN'
-  payload: any
-}
+  type: "LOGIN";
+  payload: any;
+};
 
 type LogOut = {
-  type: 'LOGOUT'
-}
+  type: "LOGOUT";
+};
 
-export type ValidAction = LogIn | LogOut
+type AddProfile = {
+  type: "ADDPROFILE";
+};
+
+export type ValidAction = LogIn | LogOut | AddProfile;
 
 export const reducer = (state: userValue, action: ValidAction): userValue => {
   switch (action.type) {
-    case 'LOGIN': {
+    case "LOGIN": {
       return {
         ...state,
         isLoggedIn: true,
-      }
+      };
     }
-    case 'LOGOUT': {
+    case "LOGOUT": {
       return {
         ...state,
         isLoggedIn: false,
-      }
+      };
     }
     default:
-      return state
+      return state;
   }
-}
+};

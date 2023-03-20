@@ -25,7 +25,7 @@ export interface IPageHeaderProps {
 export default function PageHeader(props: IPageHeaderProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const { isLoggedIn, logOut } = useContext(UserLoginContext);
+  const { isLoggedIn, logOut, profile } = useContext(UserLoginContext);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -36,7 +36,7 @@ export default function PageHeader(props: IPageHeaderProps) {
   };
 
   const handleMyAccount = () => {
-    navigate("/seller/1");
+    navigate("/seller/" + profile.id);
     handleClose();
   };
 
@@ -114,7 +114,9 @@ export default function PageHeader(props: IPageHeaderProps) {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
+                  {profile.isSeller === "true" && (
+                    <MenuItem onClick={handleMyAccount}>My Listings</MenuItem>
+                  )}
                   <MenuItem onClick={handleMyProfile}>My Profile</MenuItem>
                   <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                 </Menu>
