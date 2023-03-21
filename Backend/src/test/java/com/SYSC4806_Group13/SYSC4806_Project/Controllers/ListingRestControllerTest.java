@@ -75,7 +75,6 @@ public class ListingRestControllerTest {
         Integer inventory = 5;
         Integer inventory2 = 500;
         String releaseDate = "05/08/22";
-        String coverImage = "image url";
 
         map.put("sellerUserId", sellerUserId);
         map.put("isbn", isbn);
@@ -86,7 +85,6 @@ public class ListingRestControllerTest {
         map.put("description", description);
         map.put("inventory", inventory);
         map.put("releaseDate", releaseDate);
-        map.put("coverImage", coverImage);
 
         // Create Listing 1
         mockMvc.perform(post("/listings")

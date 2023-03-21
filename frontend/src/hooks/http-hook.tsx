@@ -9,6 +9,8 @@ export const useHttpClient = () => {
   const [error, setError] = useState(null);
   const { logOut } = useContext(UserLoginContext);
 
+  const host = "http://localhost:8080";
+
   const sendRequest = useCallback(
     async (path = "", method: httpMethod = "GET", body: {}) => {
       setIsLoading(true);
@@ -17,7 +19,6 @@ export const useHttpClient = () => {
         ? { Authorization: "Bearer " + localStorage.getItem("amazin_jwt") }
         : {};
 
-      const host = "http://localhost:8080";
       const url = host + path;
       let res = null;
       let config = {
@@ -63,5 +64,5 @@ export const useHttpClient = () => {
     setError(null);
   };
 
-  return { isLoading, error, sendRequest, clearError };
+  return { host, isLoading, error, sendRequest, clearError };
 };

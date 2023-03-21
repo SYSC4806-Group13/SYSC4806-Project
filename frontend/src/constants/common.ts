@@ -11,15 +11,15 @@ export type userDispatch = {
   setProfile: (profile: profileType) => void;
 };
 
-export type userLoginContextState = userValue & userDispatch;
+  export type httpAuthenticationURL = {
+    "GET": string[],
+    "POST": string[],
+    "DELETE": string[],
+    "PUT": string[],
+    "PATCH" : string[],
+  }
 
-export type httpAuthenticationURL = {
-  GET: String[];
-  POST: String[];
-  DELETE: String[];
-  PUT: String[];
-  PATCH: String[];
-};
+export type userLoginContextState = userValue & userDispatch;
 
 export type httpMethod = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
 

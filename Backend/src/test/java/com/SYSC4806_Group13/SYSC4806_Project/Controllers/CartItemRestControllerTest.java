@@ -262,7 +262,6 @@ public class CartItemRestControllerTest {
         String description = "description";
         Integer inventory = 5;
         String releaseDate = "05/08/22";
-        String coverImage = "image url";
 
         map.put("sellerUserId", sellerUserId);
         map.put("isbn", isbn);
@@ -273,7 +272,6 @@ public class CartItemRestControllerTest {
         map.put("description", description);
         map.put("inventory", inventory);
         map.put("releaseDate", releaseDate);
-        map.put("coverImage", coverImage);
 
         // Create Listing 1
         MvcResult result = mockMvc.perform(post("/listings")

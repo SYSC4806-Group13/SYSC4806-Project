@@ -1,6 +1,7 @@
 import { httpAuthenticationURL, httpMethod } from "./common";
 
 export const LISTING = "/listings";
+export const COVERS = "/covers/";
 export const PROFILE = "/users/userProfile";
 export const BECOME_SELLER = "/users/becomeSeller";
 
@@ -11,11 +12,26 @@ export const GOOGLE_AUTH_URL =
 
 export const isAuthenticationNeeded = (type: httpMethod, endPoint: string) => {
   const autheticatedURLS: httpAuthenticationURL = {
+    POST: [LISTING, COVERS],
+    GET: [PROFILE],
+    DELETE: [],
+    PUT: [],
+    PATCH: [BECOME_SELLER],
+  };
+
+  for (var i = 0; i < autheticatedURLS[type].length; i++) {
+    if (endPoint.startsWith(autheticatedURLS[type][i])) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**  const autheticatedURLS: httpAuthenticationURL = {
     POST: [LISTING],
     GET: [PROFILE],
     DELETE: [],
     PUT: [],
     PATCH: [BECOME_SELLER],
   };
-  return autheticatedURLS[type].includes(endPoint);
-};
+  return autheticatedURLS[type].includes(endPoint);*/

@@ -3,8 +3,8 @@ export const buildListings = (items :any) => {
         return {
             cardName: e.title,
             author: e.author,
+            listingId: e.listingId,
             price: e.price,
-            image: e.coverImage,
             alt: 'No image found'
         }
     })
