@@ -12,7 +12,7 @@ export const GOOGLE_AUTH_URL =
 
 export const isAuthenticationNeeded = (type: httpMethod, endPoint: string) => {
   const autheticatedURLS: httpAuthenticationURL = {
-    POST: [LISTING, COVERS, LISTING],
+    POST: [LISTING, COVERS],
     GET: [PROFILE],
     DELETE: [],
     PUT: [],
@@ -26,6 +26,7 @@ export const isAuthenticationNeeded = (type: httpMethod, endPoint: string) => {
   }
   return false;
 };
+
 /**  const autheticatedURLS: httpAuthenticationURL = {
     POST: [LISTING],
     GET: [PROFILE],
