@@ -28,9 +28,11 @@ describe("Testing PageHeader", () => {
         value={{
           isLoggedIn: true,
           jwtToken: "state.jwtToken",
+          profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
           logOut: () => {},
           logIn: () => {},
           setToken: () => {},
+          setProfile: () => {},
         }}
       >
         <PageHeader headerTitle="Test">
@@ -49,9 +51,11 @@ describe("Testing PageHeader", () => {
         value={{
           isLoggedIn: false,
           jwtToken: "state.jwtToken",
+          profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
           logOut: () => {},
           logIn: () => {},
           setToken: () => {},
+          setProfile: () => {},
         }}
       >
         <PageHeader headerTitle="Test">
