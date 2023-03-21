@@ -9,12 +9,11 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import AddEditIcon from '@mui/icons-material/Edit';
 import 'src/styles/ListingCard.css'
 import {useParams} from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
-import ListingGrid from "./ListingGrid";
 import DialogBox from "../Dialog/DialogBox";
 import SellerListingForm from "../Seller/SellerListingForm";
-import IFormInput from "../Seller/SellerListingForm";
-
+import {useContext} from "react";
+import {UserLoginContext} from "../../context/userLoginContext";
+import { useLocation } from 'react-router-dom'
 export interface IListingCardProps {
     cardName: string,
     title: string,
@@ -32,6 +31,8 @@ export interface IListingCardProps {
 
 export default function ListingCard (props: IListingCardProps) {
     const [editListingDialog, setEditListingDialog] = React.useState(false);
+    const {isLoggedIn} = useContext(UserLoginContext);
+    const location = useLocation();
 
     const handleEditListing = () => {
         setEditListingDialog(true);
@@ -39,10 +40,9 @@ export default function ListingCard (props: IListingCardProps) {
     };
 
     let { sellerId } = useParams();
-
     const closeDialog = () => setEditListingDialog(false);
 
-    const iForm = {
+    const previousListingFormValues = {
         isbn: props.isbn,
         title: props.title,
         author: props.author,
@@ -83,6 +83,9 @@ export default function ListingCard (props: IListingCardProps) {
           </Typography>
           <AddShoppingCartIcon className='icon-spacing'/>
         </Button>
+          {
+              //TODO for later, make local with seller. I.E. each seller can only edit their books, not all of them
+              isLoggedIn &&  location.pathname.includes("/seller/") &&
           <Button
               variant="contained"
               color="primary"
@@ -91,8 +94,9 @@ export default function ListingCard (props: IListingCardProps) {
               onClick={handleEditListing}
           >
               <AddEditIcon className='icon-spacing'/>
-              Edit Listing <AddIcon fontSize="large" />
+              Edit Listing
           </Button>
+          }
         <DialogBox
             isDialogOpen={editListingDialog}
             handleCloseDialog={closeDialog}
@@ -102,7 +106,7 @@ export default function ListingCard (props: IListingCardProps) {
                 handleCloseDialog={closeDialog}
                 sellerId={sellerId}
                 isEdit = {editListingDialog}
-                formValues={iForm}
+                formValues={previousListingFormValues}
             />
         </DialogBox>
       </CardActions>

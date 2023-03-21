@@ -8,9 +8,7 @@ import { LISTING } from "src/constants/endpoints";
 export interface ISellerListingFormProps {
   handleCloseDialog: () => void;
   sellerId: string | undefined;
-
    isEdit : boolean;
-
    formValues? : IFormInput;
 }
 
@@ -50,9 +48,9 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
 
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+      const dataCopy = JSON.parse(JSON.stringify(data));
       if(props.isEdit)
       {
-          const dataCopy = JSON.parse(JSON.stringify(data));
           dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId);
           dataCopy.price = parseFloat(dataCopy.price).toFixed(2);
           dataCopy.inventory = parseInt(dataCopy.inventory);

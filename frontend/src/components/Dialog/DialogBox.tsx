@@ -5,9 +5,7 @@ export interface IDialogBoxProps {
     isDialogOpen: boolean,
     handleCloseDialog: () => void,
     children?: React.ReactElement | React.ReactElement[]
-
     title : string
-
 }
 
 export default function DialogBox(props:IDialogBoxProps) {
