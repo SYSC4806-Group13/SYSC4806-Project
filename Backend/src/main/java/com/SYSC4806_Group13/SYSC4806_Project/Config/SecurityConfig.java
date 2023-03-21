@@ -92,7 +92,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/listings")
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/covers/*")
-                .permiteAll()
+                .permitAll()
                 .requestMatchers("/auth/**", "/oauth2/**") //End points for dealing with auth2
                 .permitAll()
                 .anyRequest()
