@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { DialogActions, Button, Typography } from "@mui/material";
+import { DialogActions, Button, Typography, Box } from "@mui/material";
 import CustomTextField from "src/components/Form/TextField";
 import { useHttpClient } from "src/hooks/http-hook";
 import { LISTING } from "src/constants/endpoints";
@@ -36,6 +36,7 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
 
   const [coverFile, setCoverFile] = React.useState<File>();
   const [isFileValidated, setIsFileValidated] = React.useState<boolean>(true);
+  const [imagePreview, setImagePreview] = React.useState('')
 
   const { sendRequest } = useHttpClient();
   const formMethods = useForm({ defaultValues });
@@ -44,6 +45,13 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
     control,
     formState: { errors },
   } = formMethods;
+
+  React.useEffect(() => {
+    if (coverFile) {
+      setImagePreview(URL.createObjectURL(coverFile))
+    }
+  }, [coverFile]);
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     if (!!!isFileValidated) {
       return;
@@ -139,19 +147,29 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
         required
         errors={errors}
       />
-      <Typography variant="h6"> Upload Cover Image </Typography>
       {!isFileValidated && (
         <Typography color={"red"}>
           {" "}
           Invalid File Type. Must be [png, jpg, jpeg]{" "}
         </Typography>
       )}
-      <input
-        required
-        type="file"
-        accept=".png, .jpg, .jpeg"
-        onChange={handleFileChange}
-      />
+      <Button variant="contained" component="label">
+        Upload Image
+        <input
+          hidden
+          required
+          type="file"
+          accept=".png, .jpg, .jpeg"
+          onChange={handleFileChange}
+        />
+      </Button>
+      {imagePreview && coverFile && (
+        <Box mt={2} textAlign="center">
+          <Typography variant="h6">Image Preview</Typography>
+          <img src={imagePreview} alt={coverFile.name} height="150px" />
+        </Box>
+      )}
+
       <DialogActions>
         <Button onClick={props.handleCloseDialog} color="error">
           Cancel
