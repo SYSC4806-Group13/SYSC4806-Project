@@ -106,7 +106,7 @@ public class ListingRestController {
         if (listing == null) {
             throw new NotFoundException("Listing with id [" + listingId + "] cannot be found");
         }
-
+        map.put("listingId",listingId);
 
         if (setValidatedStringAttributeToMap("isbn", (String) payload.get("isbn"), map)) {
             listing.setISBN((String) payload.get("isbn"));

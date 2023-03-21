@@ -14,7 +14,7 @@ export const isAuthenticationNeeded = (type: httpMethod, endPoint: string) => {
     POST: [LISTING, COVERS],
     GET: [PROFILE],
     DELETE: [],
-    PUT: [],
+    PUT: [LISTING],
     PATCH: [BECOME_SELLER],
   };
 
