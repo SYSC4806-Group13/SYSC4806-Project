@@ -8,6 +8,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Button,
 } from "@mui/material";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -15,7 +16,6 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Container } from "@mui/system";
 import ScrollTop from "src/components/ScrollTop";
 import { UserLoginContext } from "src/context/userLoginContext";
-import { GOOGLE_AUTH_URL } from "src/constants/endpoints";
 
 export interface IPageHeaderProps {
   headerTitle: string;
@@ -25,7 +25,7 @@ export interface IPageHeaderProps {
 export default function PageHeader(props: IPageHeaderProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const { isLoggedIn, logOut } = useContext(UserLoginContext);
+  const { isLoggedIn, logOut, profile } = useContext(UserLoginContext);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -36,7 +36,7 @@ export default function PageHeader(props: IPageHeaderProps) {
   };
 
   const handleMyAccount = () => {
-    navigate("/seller/1");
+    navigate("/seller/" + profile.id);
     handleClose();
   };
 
@@ -48,6 +48,11 @@ export default function PageHeader(props: IPageHeaderProps) {
   const handleLogout = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     logOut();
+    handleClose();
+  };
+
+  const handleMyProfile = (e: React.MouseEvent<HTMLElement>) => {
+    navigate("/profile");
     handleClose();
   };
 
@@ -73,14 +78,15 @@ export default function PageHeader(props: IPageHeaderProps) {
             </Typography>
             {/* TODO - Make this Log in button go to a page*/}
             {!isLoggedIn && (
-              <a
-                href={GOOGLE_AUTH_URL}
-                rel="noopener noreferrer"
-                className="button"
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
                 data-testid="login button"
+                onClick={() => navigate("/login")}
               >
-                Log In
-              </a>
+                Login
+              </Button>
             )}
             {isLoggedIn && (
               <>
@@ -109,7 +115,10 @@ export default function PageHeader(props: IPageHeaderProps) {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
+                  {profile.isSeller === "true" && (
+                    <MenuItem onClick={handleMyAccount}>My Listings</MenuItem>
+                  )}
+                  <MenuItem onClick={handleMyProfile}>My Profile</MenuItem>
                   <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                 </Menu>
               </>

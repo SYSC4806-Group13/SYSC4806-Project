@@ -1,15 +1,15 @@
 export type userValue = {
-    isLoggedIn: boolean | null
-    jwtToken: string | undefined
-  }
-  
-  export type userDispatch = {
-    logOut: () => void
-    logIn: (token: string) => void
-    setToken: (token: string) => void
-  }
+  isLoggedIn: boolean | null;
+  jwtToken: string | undefined;
+  profile: profileType;
+};
 
-  export type userLoginContextState = userValue & userDispatch
+export type userDispatch = {
+  logOut: () => void;
+  logIn: (token: string) => void;
+  setToken: (token: string) => void;
+  setProfile: (profile: profileType) => void;
+};
 
   export type httpAuthenticationURL = {
     "GET": string[],
@@ -19,4 +19,13 @@ export type userValue = {
     "PATCH" : string[],
   }
 
-  export type httpMethod = "GET" | "POST" | "DELETE" | "PUT" | "PATCH"
+export type userLoginContextState = userValue & userDispatch;
+
+export type httpMethod = "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
+
+export type profileType = {
+  id: string;
+  name: string;
+  email: string;
+  isSeller: string;
+};

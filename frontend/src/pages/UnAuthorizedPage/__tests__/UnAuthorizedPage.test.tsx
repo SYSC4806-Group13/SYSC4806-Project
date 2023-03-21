@@ -29,9 +29,11 @@ describe("Testing UnAuthorizedPage", () => {
         value={{
           isLoggedIn: true,
           jwtToken: "state.jwtToken",
+          profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
           logOut: () => {},
           logIn: () => {},
           setToken: () => {},
+          setProfile: () => {},
         }}
       >
         <UnAuthorizedPage />
@@ -48,9 +50,11 @@ describe("Testing UnAuthorizedPage", () => {
         value={{
           isLoggedIn: false,
           jwtToken: "state.jwtToken",
+          profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
           logOut: () => {},
           logIn: () => {},
           setToken: () => {},
+          setProfile: () => {},
         }}
       >
         <UnAuthorizedPage />
