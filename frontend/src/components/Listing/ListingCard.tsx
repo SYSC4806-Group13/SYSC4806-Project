@@ -7,18 +7,53 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { capitalize } from '@mui/material/utils';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import AddEditIcon from '@mui/icons-material/Edit';
 import 'src/styles/ListingCard.css'
-
+import {useParams} from "react-router-dom";
+import DialogBox from "../Dialog/DialogBox";
+import SellerListingForm from "../Seller/SellerListingForm";
+import {useContext} from "react";
+import {UserLoginContext} from "../../context/userLoginContext";
+import { useLocation } from 'react-router-dom'
 export interface IListingCardProps {
     cardName: string,
+    title: string,
     author: string,
-    listingId: number,
     price: string,
-    alt: string
+    image: string,
+    alt: string,
+    listingId : string,
+    isbn: string,
+    publisher: string,
+    description: string,
+    inventory: string,
+    releaseDate: string,
 }
 
 export default function ListingCard (props: IListingCardProps) {
-  const { host } = useHttpClient();
+    const [editListingDialog, setEditListingDialog] = React.useState(false);
+    const {isLoggedIn} = useContext(UserLoginContext);
+    const location = useLocation();
+    const { host } = useHttpClient();
+    const handleEditListing = () => {
+        setEditListingDialog(true);
+
+    };
+
+    let { sellerId } = useParams();
+    const closeDialog = () => setEditListingDialog(false);
+
+    const previousListingFormValues = {
+        isbn: props.isbn,
+        title: props.title,
+        author: props.author,
+        publisher: props.publisher,
+        description: props.description,
+        inventory: parseInt(props.inventory),
+        price: parseFloat(props.price),
+        releaseDate: props.releaseDate,
+        listingId : props.listingId
+    };
 
   return (
     <Card>
@@ -49,6 +84,32 @@ export default function ListingCard (props: IListingCardProps) {
           </Typography>
           <AddShoppingCartIcon className='icon-spacing'/>
         </Button>
+          {
+              //TODO for later, make local with seller. I.E. each seller can only edit their books, not all of them
+              isLoggedIn &&  location.pathname.includes("/seller/") &&
+          <Button
+              variant="contained"
+              color="primary"
+              size="medium"
+              className="button"
+              onClick={handleEditListing}
+          >
+              <AddEditIcon className='icon-spacing'/>
+              Edit Listing
+          </Button>
+          }
+        <DialogBox
+            isDialogOpen={editListingDialog}
+            handleCloseDialog={closeDialog}
+            title = "Edit Listing"
+        >
+            <SellerListingForm
+                handleCloseDialog={closeDialog}
+                sellerId={sellerId}
+                isEdit = {editListingDialog}
+                formValues={previousListingFormValues}
+            />
+        </DialogBox>
       </CardActions>
     </Card>
   );
