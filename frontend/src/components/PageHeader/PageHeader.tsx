@@ -82,6 +82,7 @@ export default function PageHeader(props: IPageHeaderProps) {
                 variant="contained"
                 color="success"
                 size="large"
+                data-testid="login button"
                 onClick={() => navigate("/login")}
               >
                 Login
