@@ -20,6 +20,8 @@ describe("Testing SimulatedPayment", () => {
                     logOut: () => { },
                     logIn: () => { },
                     setToken: () => { },
+                    profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
+                    setProfile: () => { },
                 }}
             >
                 <SimulatedPayment />
