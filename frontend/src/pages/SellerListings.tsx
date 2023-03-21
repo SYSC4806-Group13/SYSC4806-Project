@@ -8,6 +8,7 @@ import DialogBox from "src/components/Dialog/DialogBox";
 import SellerListingForm from "src/components/Seller/SellerListingForm";
 import { useHttpClient } from "src/hooks/http-hook";
 import { buildListings } from "src/utils/listings";
+import { UserLoginContext } from "src/context/userLoginContext";
 import "src/styles/SellerListing.css";
 import { LISTING } from "src/constants/endpoints";
 
@@ -23,6 +24,7 @@ export default function SellerListings(props: ISellerListingsProps) {
 
   const [sellerItems, setSellerItems] = React.useState([]);
   const { sendRequest } = useHttpClient();
+  const { isLoggedIn } = React.useContext(UserLoginContext);
 
   React.useEffect(() => {
     const getSellerItems = async () => {
@@ -35,6 +37,9 @@ export default function SellerListings(props: ISellerListingsProps) {
 
   return (
     <PageHeader headerTitle="Seller Listings">
+      <>
+      {isLoggedIn && (
+          <>
       <Box textAlign={"center"} mt={2}>
         <Button
           variant="contained"
@@ -46,7 +51,6 @@ export default function SellerListings(props: ISellerListingsProps) {
           Add Listing <AddIcon fontSize="large" />
         </Button>
       </Box>
-      <ListingGrid listings={sellerItems} />
       <DialogBox
         isDialogOpen={addListingDialog}
         handleCloseDialog={closeDialog}
@@ -57,6 +61,10 @@ export default function SellerListings(props: ISellerListingsProps) {
           sellerId={sellerId}
           isEdit={false}/>
       </DialogBox>
+          </>
+      )}
+      </>
+      <ListingGrid listings={sellerItems} />
     </PageHeader>
   );
 }

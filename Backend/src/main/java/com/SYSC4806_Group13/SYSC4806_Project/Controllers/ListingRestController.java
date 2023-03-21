@@ -61,10 +61,6 @@ public class ListingRestController {
         String isbn = getValidatedStringAttribute_NonNullNonBlank("isbn", (String) payload.get("isbn"));
         Integer inventory = getValidatedIntegerAttribute_positiveOnly("inventory", (Integer) payload.get("inventory"), true);
 
-        // TODO: Finalize approach to handle image storage. Consider FTP protocols with remote image hosting servers and saving links here
-        String coverImage = getValidatedStringAttribute_NonNullNonBlank("coverImage", (String) payload.get("coverImage"));
-
-
         Float floatPrice;
         try {
             String price = (String) payload.get("price");
@@ -92,8 +88,7 @@ public class ListingRestController {
                 description,
                 inventory,
                 releaseDate,
-                isActive,
-                coverImage
+                isActive
         );
 
         repo.save(listing);
@@ -133,10 +128,6 @@ public class ListingRestController {
         }
         if (setValidatedIntegerAttributeToMap("inventory", (Integer) payload.get("inventory"), map, false)) {
             listing.setInventory((Integer) payload.get("inventory"));
-        }
-        if (setValidatedStringAttributeToMap("coverImage", (String) payload.get("coverImage"), map)) {
-            // TODO: Finalize approach to handle image storage. Consider FTP protocols with remote image hosting servers and saving links here
-            listing.setCoverImage((String) payload.get("coverImage"));
         }
 
         try {

@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  margin-top: calc(5vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 50%;
+}
+
+.button {
+  width: 25%;
+}

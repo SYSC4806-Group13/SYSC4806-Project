@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useHttpClient } from 'src/hooks/http-hook';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -33,7 +34,7 @@ export default function ListingCard (props: IListingCardProps) {
     const [editListingDialog, setEditListingDialog] = React.useState(false);
     const {isLoggedIn} = useContext(UserLoginContext);
     const location = useLocation();
-
+    const { host } = useHttpClient();
     const handleEditListing = () => {
         setEditListingDialog(true);
 
@@ -59,7 +60,7 @@ export default function ListingCard (props: IListingCardProps) {
       <CardActionArea>
         <CardMedia
           component="img"
-          image={props.image}
+          src={host + '/covers/' + props.listingId}
           height="300"
           alt={props.alt}
           className="image"
