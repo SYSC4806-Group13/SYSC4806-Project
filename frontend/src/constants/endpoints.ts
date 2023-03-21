@@ -26,6 +26,7 @@ export const isAuthenticationNeeded = (type: httpMethod, endPoint: string) => {
   }
   return false;
 };
+
 /**  const autheticatedURLS: httpAuthenticationURL = {
     POST: [LISTING],
     GET: [PROFILE],
