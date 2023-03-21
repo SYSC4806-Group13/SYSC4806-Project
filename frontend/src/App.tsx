@@ -8,6 +8,9 @@ import UnAuthorizedPage from "./pages/UnAuthorizedPage/UnAuthorizedPage";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler/OAuth2RedirectHandler";
 import Profile from "./pages/Profile/Profile";
 import Login from "./pages/Login/Login";
+import Cart from "./pages/Cart/Cart";
+import OrderHistory from "./components/OrderHistory/OrderHistory";
+import SimulatedPayment from "./components/SimulatedPayment/SimulatedPayment";
 
 export default function App() {
   const { isLoggedIn, profile } = useContext(UserLoginContext);
@@ -42,6 +45,9 @@ export default function App() {
           )}
         />
         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/orderHistory" element={<OrderHistory />} />
+        <Route path="/simulatedPayment" element={<SimulatedPayment />} />
         <Route
           path="/protected"
           element={isLoggedInRouteAccess(

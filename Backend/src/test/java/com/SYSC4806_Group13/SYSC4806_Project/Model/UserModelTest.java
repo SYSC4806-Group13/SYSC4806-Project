@@ -16,7 +16,7 @@ public class UserModelTest {
     UserRepository userRepository;
 
     @Test
-    public void testFindByEmail(){
+    public void testFindByEmail() {
         userRepository.deleteAll();
 
         User user = new User();
@@ -26,24 +26,23 @@ public class UserModelTest {
         userRepository.save(user);
 
         Optional<User> userToTest = userRepository.findByEmail("email");
-        Assert.isTrue(userToTest.isPresent(),"There should be a user");
+        Assert.isTrue(userToTest.isPresent(), "There should be a user");
 
-        Assert.isTrue(userToTest.get().getEmail().equals("email"),"The email should be 'email'");
+        Assert.isTrue(userToTest.get().getEmail().equals("email"), "The email should be 'email'");
     }
 
     @Test
-    public void testFindUserById(){
+    public void testFindUserById() {
         userRepository.deleteAll();
 
         User user = new User();
         user.setEmail("email");
-        user.setId(2L);
-
         userRepository.save(user);
 
-        User userToTest = userRepository.findUserById(2L);
-        Assert.isTrue(userToTest != null,"There should be a user");
 
-        Assert.isTrue(userToTest.getId() == 2L,"The id should be 2");
+        User userToTest = userRepository.findUserById(user.getId());
+        Assert.isTrue(userToTest != null, "There should be a user");
+
+        Assert.isTrue(userToTest.getId() == user.getId(), "The id of the retrieved user should match the saved user");
     }
 }
