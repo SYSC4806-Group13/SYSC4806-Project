@@ -9,7 +9,18 @@ import axios from 'axios';
 import ListingGrid from 'src/components/Listing/ListingGrid';
 
 jest.mock("axios");
-
+const mockUseLocationValue = {
+  pathname: "/testroute",
+  search: '',
+  hash: '',
+  state: null
+}
+jest.mock('react-router', () => ({
+  ...jest.requireActual("react-router") as {},
+  useLocation: jest.fn().mockImplementation(() => {
+    return mockUseLocationValue;
+  })
+}));
 test('no listing found', async () => {
   render(<ListingGrid listings={[]} />)
 
