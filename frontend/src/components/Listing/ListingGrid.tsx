@@ -67,8 +67,8 @@ export default function ListingGrid(props: IListingGridProps) {
                         id: 'sortListings',
                     }}
                 >
-                    <MenuItem value={"Alphabetic"} onClick={() => setSortingType("A-Z")}>Alphabetic (A-Z)</MenuItem>
-                    <MenuItem value={"ReverseAlphabetic"} onClick={() => setSortingType("Z-A")}>Reverse Alphabetic (Z-A)</MenuItem>
+                    <MenuItem value={"Alphabetic"} onClick={() => setSortingType("Alphabetic")}>Alphabetic (A-Z)</MenuItem>
+                    <MenuItem value={"ReverseAlphabetic"} onClick={() => setSortingType("ReverseAlphabetic")}>Reverse Alphabetic (Z-A)</MenuItem>
                     <MenuItem value={"Expensive"} onClick={() => setSortingType("Expensive")}>Price (Most expensive)</MenuItem>
                     <MenuItem value={"Cheapest"} onClick={() => setSortingType("Cheapest")}>Price (Cheapest)</MenuItem>
                     <MenuItem value={"AuthorAlphabetic"}onClick={() => setSortingType("AuthorAlphabetic")}>Author Alphabetic</MenuItem>
