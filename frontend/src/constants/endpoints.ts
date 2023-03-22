@@ -4,18 +4,40 @@ export const LISTING = "/listings";
 export const COVERS = "/covers/";
 export const PROFILE = "/users/userProfile";
 export const BECOME_SELLER = "/users/becomeSeller";
+export const CART_ITEMS = "/cartItems";
+export const CART_ITEM = "/cartItem";
+export const CHECKOUT = "/checkout";
+export const ORDER_HISTORY = "/orderHistory";
 
 export const API_BASE_URL = "http://localhost:8080";
-export const OAUTH2_REDIRECT_URI = "http://localhost:3000/oauth2/redirect"
+export const OAUTH2_REDIRECT_URI = "http://localhost:3000/oauth2/redirect";
 export const GOOGLE_AUTH_URL = API_BASE_URL + "/oauth2/authorize/google?redirect_uri=" + OAUTH2_REDIRECT_URI;
 
 export const isAuthenticationNeeded = (type: httpMethod, endPoint: string) => {
+
   const autheticatedURLS: httpAuthenticationURL = {
-    POST: [LISTING, COVERS],
-    GET: [PROFILE],
-    DELETE: [],
-    PUT: [LISTING],
-    PATCH: [BECOME_SELLER],
+    POST: [
+      LISTING,
+      COVERS,
+      CART_ITEMS,
+      CHECKOUT,
+    ],
+    GET: [
+      PROFILE,
+      CART_ITEMS,
+      CART_ITEM,
+      ORDER_HISTORY,
+    ],
+    DELETE: [
+      CART_ITEMS,
+    ],
+    PUT: [
+      LISTING,
+      CART_ITEMS,
+    ],
+    PATCH: [
+      BECOME_SELLER,
+    ],
   };
 
   for (var i = 0; i < autheticatedURLS[type].length; i++) {
@@ -26,12 +48,4 @@ export const isAuthenticationNeeded = (type: httpMethod, endPoint: string) => {
   return false;
 };
 
-/**  const autheticatedURLS: httpAuthenticationURL = {
-    POST: [LISTING],
-    GET: [PROFILE],
-    DELETE: [],
-    PUT: [],
-    PATCH: [BECOME_SELLER],
-  };
-  return autheticatedURLS[type].includes(endPoint);*/
 

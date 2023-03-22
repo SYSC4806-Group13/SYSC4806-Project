@@ -1,11 +1,11 @@
-export const buildListings = (items :any) => {
-    items = items.map((e :any) => {
+export const buildListings = (items: any) => {
+    items = items.map((e: any) => {
         return {
+            listingId: e.listingId,
             cardName: e.title,
             author: e.author,
             price: e.price,
             image: e.coverImage,
-            listingId: e.listingId,
             isbn: e.isbn,
             publisher: e.publisher,
             description: e.description,

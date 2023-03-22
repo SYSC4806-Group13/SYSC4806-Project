@@ -11,53 +11,53 @@ import { buildListings } from "src/utils/listings";
 import "src/styles/SellerListing.css";
 import { LISTING } from "src/constants/endpoints";
 
-export interface ISellerListingsProps {}
+export interface ISellerListingsProps { }
 
 export default function SellerListings(props: ISellerListingsProps) {
-    const [addListingDialog, setaddListingDialog] = React.useState(false);
-    const handleAddListing = () => {
-        setaddListingDialog(true);
+  const [addListingDialog, setaddListingDialog] = React.useState(false);
+  const handleAddListing = () => {
+    setaddListingDialog(true);
+  };
+  const closeDialog = () => setaddListingDialog(false);
+  let { sellerId } = useParams();
+
+  const [sellerItems, setSellerItems] = React.useState([]);
+  const { sendRequest } = useHttpClient();
+
+  React.useEffect(() => {
+    const getSellerItems = async () => {
+      let items = await sendRequest(LISTING, "GET", {});
+      items = buildListings(items);
+      setSellerItems(items);
     };
-    const closeDialog = () => setaddListingDialog(false);
-    let { sellerId } = useParams();
+    getSellerItems();
+  }, [sendRequest, addListingDialog]);
 
-    const [sellerItems, setSellerItems] = React.useState([]);
-    const { sendRequest } = useHttpClient();
+  return (
 
-    React.useEffect(() => {
-        const getSellerItems = async () => {
-            let items = await sendRequest(LISTING, "GET", {});
-            items = buildListings(items);
-            setSellerItems(items);
-        };
-        getSellerItems();
-    }, [sendRequest, addListingDialog]);
-
-    return (
-
-        <PageHeader headerTitle="Seller Listings">
-            <Box textAlign={"center"} mt={2}>
-                <Button
-                    variant="contained"
-                    color="success"
-                    size="large"
-                    className="button"
-                    onClick={handleAddListing}
-                >
-                    Add Listing <AddIcon fontSize="large" />
-                </Button>
-            </Box>
-            <ListingGrid listings={sellerItems} />
-            <DialogBox
-                isDialogOpen={addListingDialog}
-                handleCloseDialog={closeDialog}
-                title = "Add Listing"
-            >
-                <SellerListingForm
-                    handleCloseDialog={closeDialog}
-                    sellerId={sellerId}
-                    isEdit={false}/>
-            </DialogBox>
-        </PageHeader>
-    );
+    <PageHeader headerTitle="Seller Listings">
+      <Box textAlign={"center"} mt={2}>
+        <Button
+          variant="contained"
+          color="success"
+          size="large"
+          className="button"
+          onClick={handleAddListing}
+        >
+          Add Listing <AddIcon fontSize="large" />
+        </Button>
+      </Box>
+      <ListingGrid listings={sellerItems} />
+      <DialogBox
+        isDialogOpen={addListingDialog}
+        handleCloseDialog={closeDialog}
+        title="Add Listing"
+      >
+        <SellerListingForm
+          handleCloseDialog={closeDialog}
+          sellerId={sellerId}
+          isEdit={false} />
+      </DialogBox>
+    </PageHeader>
+  );
 }
