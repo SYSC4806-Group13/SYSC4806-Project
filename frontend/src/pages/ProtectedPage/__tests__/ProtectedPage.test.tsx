@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import ProtectedPage from "../ProtectedPage";
+import ProtectedPage from "src/pages/ProtectedPage/ProtectedPage";
 import { UserLoginContext } from "src/context/userLoginContext";
 
 const mockedUsedNavigate = jest.fn();

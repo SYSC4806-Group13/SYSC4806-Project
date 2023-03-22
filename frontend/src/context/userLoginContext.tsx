@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 
-import { profileType, userLoginContextState } from "../constants/common";
+import { profileType, userLoginContextState } from "src/constants/common";
 import { reducer } from "./userLoginState";
 
 const isLoggedLS = localStorage.getItem("isLoggedIn");

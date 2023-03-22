@@ -2,6 +2,8 @@ package com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel;
 
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+
 @Entity
 public class CartItem {
 
@@ -13,9 +15,12 @@ public class CartItem {
 
     private Long quantity;
 
-
-    @ManyToOne(targetEntity = Listing.class)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Listing listing;
+    
+    private Timestamp purchaseDateTime;
+
+    private Float totalCartItemPriceAtPurchase;
 
     public CartItem() {
     }
@@ -58,4 +63,30 @@ public class CartItem {
         this.listing = listing;
     }
 
+    public Timestamp getPurchaseDateTime() {
+        return purchaseDateTime;
+    }
+
+    public void setPurchaseDateTime(Timestamp purchaseDate) {
+        this.purchaseDateTime = purchaseDate;
+    }
+
+    public Float getTotalCartItemPriceAtPurchase() {
+        return totalCartItemPriceAtPurchase;
+    }
+
+    public void setTotalCartItemPriceAtPurchase(Float totalCartItemPriceAtPurchase) {
+        this.totalCartItemPriceAtPurchase = totalCartItemPriceAtPurchase;
+    }
+
+    public boolean checkout() {
+        if (purchaseDateTime == null && totalCartItemPriceAtPurchase == null && quantity <= listing.getInventory()) {
+            purchaseDateTime = new Timestamp(System.currentTimeMillis());
+            totalCartItemPriceAtPurchase = quantity * (listing.getPrice() == null ? 0.01f : listing.getPrice());
+            listing.setInventory((int) (listing.getInventory() - quantity));
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

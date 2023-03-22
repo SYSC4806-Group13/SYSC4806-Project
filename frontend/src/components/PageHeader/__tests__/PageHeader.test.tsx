@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { UserLoginContext } from "src/context/userLoginContext";
-import PageHeader from "../PageHeader";
+import PageHeader from "src/components/PageHeader/PageHeader";
 
 const mockedUsedNavigate = jest.fn();
 
