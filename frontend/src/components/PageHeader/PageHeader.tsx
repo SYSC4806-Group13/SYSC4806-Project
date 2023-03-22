@@ -16,7 +16,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { Container } from "@mui/system";
 import ScrollTop from "src/components/ScrollTop";
 import { UserLoginContext } from "src/context/userLoginContext";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 export interface IPageHeaderProps {
   headerTitle: string;
@@ -60,13 +60,12 @@ export default function PageHeader(props: IPageHeaderProps) {
   const handleCart = () => {
     navigate("/cart");
     handleClose();
-  }
+  };
 
   const handleOrderHistory = () => {
     navigate("/orderHistory");
     handleClose();
-  }
-
+  };
 
   return (
     <React.Fragment>
@@ -102,11 +101,7 @@ export default function PageHeader(props: IPageHeaderProps) {
             )}
             {isLoggedIn && (
               <>
-                <IconButton
-                  size="large"
-                  onClick={handleCart}
-                  color="inherit"
-                >
+                <IconButton size="large" onClick={handleCart} color="inherit">
                   <ShoppingCartIcon />
                 </IconButton>
                 <IconButton
@@ -122,9 +117,9 @@ export default function PageHeader(props: IPageHeaderProps) {
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
-                  anchorOrigin={{ vertical: "top", horizontal: "right", }}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
                   keepMounted
-                  transformOrigin={{ vertical: "top", horizontal: "right", }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
@@ -132,8 +127,9 @@ export default function PageHeader(props: IPageHeaderProps) {
                     <MenuItem onClick={handleMyAccount}>My Listings</MenuItem>
                   )}
                   <MenuItem onClick={handleMyProfile}>My Profile</MenuItem>
-                  <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
-                  <MenuItem onClick={handleOrderHistory}>Order History</MenuItem>
+                  <MenuItem onClick={handleOrderHistory}>
+                    Order History
+                  </MenuItem>
                   <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                 </Menu>
               </>
