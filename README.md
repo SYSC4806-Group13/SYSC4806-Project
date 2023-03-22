@@ -67,5 +67,6 @@
 
 - Complete manual integration testing QA
 - Features
-    - Recommendation system
+    - Recommendation system with Jaccard
     - Investigate options for live deployment
+- Overall styling overhaul
