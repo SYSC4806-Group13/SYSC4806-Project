@@ -48,16 +48,14 @@
         - Endpoint for user carts (CRUD)
         - Partial completion of O-Auth integration and integration with users (PR in review)
 
-### Milestone/Sprint 2 - In Progress
+### Milestone/Sprint 2 - Complete
 
 - Features
-    - Completed integration of O-Auth system and associated user management systems
-    - Features
-        Cart Feature
-        Checkout feature
-        O-Auth Spring Security
-        Editing Listings with Cover images
-        Filtering Listings
+       - Cart Feature
+       - Checkout feature
+       - O-Auth Spring Security
+       - Editing Listings with Cover images
+       - Filtering Listings
        
        # Important notices
      - Since OAuth has been implemented, you need a specific application.propertie's to be able to run the backend.
