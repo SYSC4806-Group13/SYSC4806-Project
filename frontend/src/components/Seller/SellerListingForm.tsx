@@ -12,7 +12,6 @@ export interface ISellerListingFormProps {
   formValues?: IFormInput;
 }
 
-
 export interface IFormInput {
   isbn: string;
   title: string;
@@ -31,16 +30,19 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
     isbn: props.formValues && props.isEdit ? props.formValues?.isbn : "",
     title: props.formValues && props.isEdit ? props.formValues?.title : "",
     author: props.formValues && props.isEdit ? props.formValues?.author : "",
-    publisher: props.formValues && props.isEdit ? props.formValues?.publisher : "",
-    description: props.formValues && props.isEdit ? props.formValues?.description : "",
-    inventory: props.formValues && props.isEdit ? props.formValues?.inventory : 1,
+    publisher:
+      props.formValues && props.isEdit ? props.formValues?.publisher : "",
+    description:
+      props.formValues && props.isEdit ? props.formValues?.description : "",
+    inventory:
+      props.formValues && props.isEdit ? props.formValues?.inventory : 1,
     price: props.formValues && props.isEdit ? props.formValues?.price : 0.0,
     releaseDate: new Date().toISOString().slice(0, 10),
   };
 
   const [coverFile, setCoverFile] = React.useState<File>();
   const [isFileValidated, setIsFileValidated] = React.useState<boolean>(true);
-  const [imagePreview, setImagePreview] = React.useState('');
+  const [imagePreview, setImagePreview] = React.useState("");
 
   const { sendRequest } = useHttpClient();
   const formMethods = useForm({ defaultValues });
@@ -52,7 +54,7 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
 
   React.useEffect(() => {
     if (coverFile) {
-      setImagePreview(URL.createObjectURL(coverFile))
+      setImagePreview(URL.createObjectURL(coverFile));
     }
   }, [coverFile]);
 
@@ -68,26 +70,30 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
       if (props.formValues?.listingId)
         dataCopy.listingId = parseInt(props.formValues.listingId);
       const listing: any = await sendRequest(LISTING, "PUT", dataCopy);
-      const formData: any = new FormData();
-      formData.append("imageFile", coverFile);
-      await sendRequest("/covers/" + listing.listingId, "POST", formData);
-      console.log(listing);
+
+      if (coverFile != null) {
+        const formData: any = new FormData();
+        formData.append("imageFile", coverFile);
+        await sendRequest("/covers/" + listing.listingId, "POST", formData);
+      }
+
       props.handleCloseDialog();
       window.location.reload();
-    }
-    else {
+    } else {
       const dataCopy = JSON.parse(JSON.stringify(data));
       dataCopy.sellerUserId = parseInt(dataCopy.sellerUserId);
       dataCopy.price = parseFloat(dataCopy.price).toFixed(2);
       dataCopy.inventory = parseInt(dataCopy.inventory);
-      dataCopy.coverImage = "/static/images/book-cover.jpg";
       const listing: any = await sendRequest(LISTING, "POST", dataCopy);
-      const formData: any = new FormData();
-      formData.append("imageFile", coverFile);
-      await sendRequest("/covers/" + listing.listingId, "POST", formData);
+
+      if (coverFile != null) {
+        const formData: any = new FormData();
+        formData.append("imageFile", coverFile);
+        await sendRequest("/covers/" + listing.listingId, "POST", formData);
+      }
+
       props.handleCloseDialog();
     }
-
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,7 +187,7 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
         Upload Image
         <input
           hidden
-          required
+          required={props.isEdit ? false : true}
           type="file"
           accept=".png, .jpg, .jpeg"
           onChange={handleFileChange}
