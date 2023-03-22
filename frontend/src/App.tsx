@@ -3,14 +3,14 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AllListings from "src/pages/AllListings";
 import SellerListings from "src/pages/SellerListings";
 import { UserLoginContext } from "src/context/userLoginContext";
-import ProtectedPage from "./pages/ProtectedPage/ProtectedPage";
-import UnAuthorizedPage from "./pages/UnAuthorizedPage/UnAuthorizedPage";
-import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler/OAuth2RedirectHandler";
-import Profile from "./pages/Profile/Profile";
-import Login from "./pages/Login/Login";
-import Cart from "./pages/Cart/Cart";
-import OrderHistory from "./components/OrderHistory/OrderHistory";
-import SimulatedPayment from "./components/SimulatedPayment/SimulatedPayment";
+import ProtectedPage from "src/pages/ProtectedPage/ProtectedPage";
+import UnAuthorizedPage from "src/pages/UnAuthorizedPage/UnAuthorizedPage";
+import OAuth2RedirectHandler from "src/pages/OAuth2RedirectHandler/OAuth2RedirectHandler";
+import Profile from "src/pages/Profile/Profile";
+import Login from "src/pages/Login/Login";
+import Cart from "src/pages/Cart/Cart";
+import OrderHistory from "src/components/OrderHistory/OrderHistory";
+import SimulatedPayment from "src/components/SimulatedPayment/SimulatedPayment";
 
 export default function App() {
   const { isLoggedIn, profile } = useContext(UserLoginContext);

@@ -9,13 +9,13 @@ import { capitalize } from '@mui/material/utils';
 import AddEditIcon from '@mui/icons-material/Edit';
 import 'src/styles/ListingCard.css'
 import { useParams } from "react-router-dom";
-import DialogBox from "../Dialog/DialogBox";
-import SellerListingForm from "../Seller/SellerListingForm";
+import DialogBox from "src/components/Dialog/DialogBox";
+import SellerListingForm from "src/components/Seller/SellerListingForm";
 import { useContext } from "react";
-import { UserLoginContext } from "../../context/userLoginContext";
+import { UserLoginContext } from "src/context/userLoginContext";
 import { useLocation } from 'react-router-dom'
 import 'src/styles/ListingCard.css'
-import AddToCartButton from './AddToCartButton';
+import AddToCartButton from 'src/components/Listing/AddToCartButton';
 
 export interface IListingCardProps {
   cardName: string,

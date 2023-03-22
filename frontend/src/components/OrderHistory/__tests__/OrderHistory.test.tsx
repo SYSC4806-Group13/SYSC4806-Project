@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { UserLoginContext } from "src/context/userLoginContext";
-import OrderHistory from "../OrderHistory";
+import OrderHistory from "src/components/OrderHistory/OrderHistory";
 
 const mockedUsedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({

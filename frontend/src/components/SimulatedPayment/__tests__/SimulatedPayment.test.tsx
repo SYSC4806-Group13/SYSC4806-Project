@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { UserLoginContext } from "src/context/userLoginContext";
-import SimulatedPayment from "../SimulatedPayment";
+import SimulatedPayment from "src/components/SimulatedPayment/SimulatedPayment";
 
 
 const mockedUsedNavigate = jest.fn();

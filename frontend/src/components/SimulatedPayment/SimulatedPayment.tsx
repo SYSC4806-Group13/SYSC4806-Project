@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { CART_ITEMS, CHECKOUT } from "src/constants/endpoints";
-import PageHeader from "../PageHeader/PageHeader";
+import PageHeader from "src/components/PageHeader/PageHeader";
 
 
 export default function SimulatedPayment() {
