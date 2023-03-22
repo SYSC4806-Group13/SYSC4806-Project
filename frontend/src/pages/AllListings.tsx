@@ -5,11 +5,13 @@ import { LISTING } from "src/constants/endpoints";
 import { useHttpClient } from "src/hooks/http-hook";
 import { buildListings } from "src/utils/listings";
 
-export interface IAllListingsProps {}
+export interface IAllListingsProps { }
 
 export default function AllListings(props: IAllListingsProps) {
   const [listings, setListings] = React.useState([]);
   const { sendRequest } = useHttpClient();
+
+  // Retrieving listings
   React.useEffect(() => {
     const getSellerItems = async () => {
       let items = await sendRequest(LISTING, "GET", {});
@@ -18,6 +20,7 @@ export default function AllListings(props: IAllListingsProps) {
     };
     getSellerItems();
   }, [sendRequest]);
+
   return (
     <React.Fragment>
       <PageHeader headerTitle="Listing">

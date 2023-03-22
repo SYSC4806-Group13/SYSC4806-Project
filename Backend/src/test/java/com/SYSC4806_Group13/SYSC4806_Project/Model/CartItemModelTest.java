@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 @SpringBootTest
 public class CartItemModelTest {
     @Autowired
@@ -86,7 +88,7 @@ public class CartItemModelTest {
         cartItemRepo.save(ci3);
 
         // Assert we get ci1 with userId=123L and listing1.id
-        Assert.isTrue(cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listing1.getListingId()).getId().equals(id), "Wrong entry retrieved");
+        Assert.isTrue(cartItemRepo.findCartItemByUserIdAndListing_ListingIdAndPurchaseDateTimeIsNull(userId, listing1.getListingId()).getId().equals(id), "Wrong entry retrieved");
 
         cartItemRepo.deleteAll();
     }
@@ -115,8 +117,59 @@ public class CartItemModelTest {
         cartItemRepo.save(ci3);
 
         Assert.isTrue(cartItemRepo.count() == 3, "Wrong number of entries");
-        cartItemRepo.delete(cartItemRepo.findCartItemByUserIdAndListing_ListingId(userId, listing1.getListingId()));
+        cartItemRepo.delete(cartItemRepo.findCartItemByUserIdAndListing_ListingIdAndPurchaseDateTimeIsNull(userId, listing1.getListingId()));
         Assert.isTrue(cartItemRepo.count() == 2, "Wrong number of entries");
+
+        cartItemRepo.deleteAll();
+    }
+
+    @Test
+    void cartItemCheckoutAndOrderHistoryTest() {
+        cartItemRepo.deleteAll();
+        Long userId = 123L;
+        Long userId2 = 1234L;
+
+        Listing listing1 = new Listing();
+        listing1.setPrice(123.45f);
+        listing1.setInventory(123);
+        listingRepo.save(listing1);
+        Listing listing2 = new Listing();
+        listing2.setPrice(123.45f);
+        listing2.setInventory(123);
+        listingRepo.save(listing2);
+
+
+        CartItem ci1 = new CartItem(userId, listing1, 1L);
+        cartItemRepo.save(ci1);
+
+        // Different listing
+        CartItem ci2 = new CartItem(userId, listing2, 1L);
+        cartItemRepo.save(ci2);
+
+        //Different user ID from previous 2
+        CartItem ci3 = new CartItem(userId2, listing1, 1L);
+        cartItemRepo.save(ci3);
+
+        Assert.isTrue(cartItemRepo.count() == 3, "Wrong number of entries");
+        Assert.isTrue(cartItemRepo.findAllByUserIdAndPurchaseDateTimeIsNotNullOrderByPurchaseDateTimeDesc(userId).size() == 0, "Should not have checked out items");
+        List<CartItem> items = cartItemRepo.findAllByUserIdAndPurchaseDateTimeIsNull(userId);
+        Assert.isTrue(items.size() == 2, "Should have 2 items in the cart");
+
+        for (CartItem item : items) {
+            Assert.isTrue(item.checkout(), "Checkout should return true");
+            cartItemRepo.save(item);
+        }
+
+        Assert.isTrue(cartItemRepo.count() == 3, "Wrong number of entries"); // No removed items. They only change
+        Assert.isTrue(cartItemRepo.findAllByUserIdAndPurchaseDateTimeIsNull(userId).size() == 0, "Should have no items in the cart");
+        items = cartItemRepo.findAllByUserIdAndPurchaseDateTimeIsNotNullOrderByPurchaseDateTimeDesc(userId);
+        Assert.isTrue(items.size() == 2, "Should have 2 checked out items");
+
+        for (CartItem item : items) {
+            Assert.isTrue(!item.checkout(), "Checkout should return false for checked out items");
+            Assert.isTrue(item.getTotalCartItemPriceAtPurchase() != null, "Should have a non null price at purchase");
+            Assert.isTrue(item.getListing().getInventory() == 122, "Listing value did not get updated");
+        }
 
         cartItemRepo.deleteAll();
     }

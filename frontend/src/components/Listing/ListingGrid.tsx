@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {Grid, Container, Typography, Grow, Paper, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
-import ListingCard from './ListingCard';
+import ListingCard from 'src/components/Listing/ListingCard';
 import 'src/styles/ListingGrid.css'
 
 export interface IListingGridProps {
@@ -21,16 +21,8 @@ export interface IListingGridProps {
     }>
 }
 
-export default function ListingGrid(props: IListingGridProps) {
+export default function ListingGrid({ listings }: IListingGridProps) {
     const [sortingType,setSortingType] = React.useState("Alphabetic");
-    if (props.listings.length === 0) {
-        return (
-            <Typography variant="h4" align='center' color='text.secondary' mt={2}>
-                No listings found
-            </Typography>
-        );
-    }
-
     const sortListings = (listings : Array<any>) => {
         const myClonedArray: any[] = [];
         listings.forEach(val => myClonedArray.push(Object.assign({}, val)));
@@ -55,6 +47,13 @@ export default function ListingGrid(props: IListingGridProps) {
     }
 
     return (
+    <>
+      {listings.length === 0 &&
+        <Typography variant="h4" align='center' color='text.secondary' mt={2}>
+          No listings found
+        </Typography>
+      }
+      {listings.length !== 0 &&
         <Container maxWidth="xl" className='grid'>
             <FormControl>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -74,23 +73,34 @@ export default function ListingGrid(props: IListingGridProps) {
                     <MenuItem value={"AuthorAlphabetic"}onClick={() => setSortingType("AuthorAlphabetic")}>Author Alphabetic</MenuItem>
                 </Select>
             </FormControl>
-            <Grid container spacing={{ xs: 1, sm: 4 }} columns={{ xs: 1, sm: 8, md: 12 }}>
-                {sortListings(props.listings).map((x) => {
-                    return (
-                        <Grid item xs={1} sm={4} md={4} key={uuidv4()}>
-                            <Grow in={true} timeout={1000}>
-                                <Paper>
-                                    <ListingCard cardName={x.cardName} author={x.author} price={x.price} image={x.image} alt={x.alt}
-                                                 description={x.description} inventory={x.inventory}
-                                                 listingId={x.listingId} isbn={x.isbn}
-                                                 publisher={x.publisher} releaseDate={x.releaseDate} title={x.title}/>
-                                </Paper>
-                            </Grow>
-                        </Grid>
-                    )
-                })}
-            </Grid>
+          <Grid container spacing={{ xs: 1, sm: 4 }} columns={{ xs: 1, sm: 8, md: 12 }}>
+            {sortListings(listings).map((currentListing) => {
+              return (
+                <Grid item xs={1} sm={4} md={4} key={uuidv4()}>
+                  <Grow in={true} timeout={1000}>
+                    <Paper>
+                      <ListingCard
+                        cardName={currentListing.cardName}
+                        author={currentListing.author}
+                        price={currentListing.price}
+                        image={currentListing.image}
+                        alt={currentListing.alt}
+                        description={currentListing.description}
+                        inventory={currentListing.inventory}
+                        listingId={currentListing.listingId}
+                        isbn={currentListing.isbn}
+                        publisher={currentListing.publisher}
+                        releaseDate={currentListing.releaseDate}
+                        title={currentListing.title}
+                      />
+                    </Paper>
+                  </Grow>
+                </Grid>
+              )
+            })}
+          </Grid>
         </Container>
-
-    );
+      }
+    </>
+  );
 }

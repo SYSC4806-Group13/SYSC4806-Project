@@ -1,4 +1,4 @@
-import { userValue } from "../constants/common";
+import { userValue } from "src/constants/common";
 
 const isLoggedLS = localStorage.getItem("amazin_jwt");
 
