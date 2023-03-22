@@ -22,7 +22,7 @@ export interface IListingGridProps {
 }
 
 export default function ListingGrid(props: IListingGridProps) {
-    const [sortingType,setSortingType] = React.useState("A-Z");
+    const [sortingType,setSortingType] = React.useState("Alphabetic");
     if (props.listings.length === 0) {
         return (
             <Typography variant="h4" align='center' color='text.secondary' mt={2}>
@@ -32,14 +32,13 @@ export default function ListingGrid(props: IListingGridProps) {
     }
 
     const sortListings = (listings : Array<any>) => {
-        console.log("I was called");
         const myClonedArray: any[] = [];
         listings.forEach(val => myClonedArray.push(Object.assign({}, val)));
         switch (sortingType){
-            case "A-Z":
+            case "Alphabetic":
                 myClonedArray.sort((a,b)=>(a.title>b.title)? 1: -1);
                 break;
-            case "Z-A":
+            case "ReverseAlphabetic":
                 myClonedArray.sort((a,b)=>(b.title>a.title)? 1: -1);
                 break;
             case "Expensive":
@@ -62,14 +61,14 @@ export default function ListingGrid(props: IListingGridProps) {
                     Listing Sorting
                 </InputLabel>
                 <Select
-                    defaultValue={"A-Z"}
+                    defaultValue={"Alphabetic"}
                     inputProps={{
                         name: 'listingSorting',
                         id: 'sortListings',
                     }}
                 >
-                    <MenuItem value={"A-Z"} onClick={() => setSortingType("A-Z")}>Alphabetic (A-Z)</MenuItem>
-                    <MenuItem value={"Z-A"} onClick={() => setSortingType("Z-A")}>Reverse Alphabetic (Z-A)</MenuItem>
+                    <MenuItem value={"Alphabetic"} onClick={() => setSortingType("A-Z")}>Alphabetic (A-Z)</MenuItem>
+                    <MenuItem value={"ReverseAlphabetic"} onClick={() => setSortingType("Z-A")}>Reverse Alphabetic (Z-A)</MenuItem>
                     <MenuItem value={"Expensive"} onClick={() => setSortingType("Expensive")}>Price (Most expensive)</MenuItem>
                     <MenuItem value={"Cheapest"} onClick={() => setSortingType("Cheapest")}>Price (Cheapest)</MenuItem>
                     <MenuItem value={"AuthorAlphabetic"}onClick={() => setSortingType("AuthorAlphabetic")}>Author Alphabetic</MenuItem>
