@@ -51,13 +51,13 @@
 ### Milestone/Sprint 2 - Complete
 
 - Features
-       - Cart Feature
-       - Checkout feature
-       - O-Auth Spring Security
-       - Editing Listings with Cover images
-       - Filtering Listings
+     - Cart Feature
+     - Checkout feature
+     - O-Auth Spring Security
+     - Editing Listings with Cover images
+     - Filtering Listings
        
-       # Important notices
+- Important notices
      - Since OAuth has been implemented, you need a specific application.propertie's to be able to run the backend.
        Please ask Group 13 if you need them.
      - You need a gmail account.
