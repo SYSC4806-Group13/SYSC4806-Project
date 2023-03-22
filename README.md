@@ -51,15 +51,19 @@
 ### Milestone/Sprint 2 - In Progress
 
 - Features
-    - Complete integration of O-Auth system and associated user management systems
-    - Frontend (FE)
-        - User's cart view + Backend integration
-        - Individual listing view + Backend integration
-        - Integration with updated image management system in backend
-    - Backend (BE)
-        - Add checkout cart endpoint and order confirmation system.
-        - Add order history tracking after checkout
-        - Update listing API image handling system
+    - Completed integration of O-Auth system and associated user management systems
+    - Features
+        Cart Feature
+        Checkout feature
+        O-Auth Spring Security
+        Editing Listings with Cover images
+        Filtering Listings
+       
+       # Important notices
+     - Since OAuth has been implemented, you need a specific application.propertie's to be able to run the backend.
+       Please ask Group 13 if you need them.
+     - You need a gmail account.
+       
 
 ### Milestone/Sprint 3 - Starting March 22nd
 
