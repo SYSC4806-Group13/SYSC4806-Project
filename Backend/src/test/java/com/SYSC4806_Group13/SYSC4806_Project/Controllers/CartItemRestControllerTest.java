@@ -1,8 +1,8 @@
 package com.SYSC4806_Group13.SYSC4806_Project.Controllers;
 
 import com.SYSC4806_Group13.SYSC4806_Project.AuthenticationSuperUserUtil;
-import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Security.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Assert;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,6 +64,85 @@ public class CartItemRestControllerTest {
     }
 
     @Test
+    void checkoutTest_integration() throws Exception {
+        // Needed variables
+        MvcResult result;
+        List list;
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, Long> map = new HashMap<String, Long>();
+
+        long listingId1 = this.makeListingViaApiCall_returnListingId(1, 123);
+        long listingId2 = this.makeListingViaApiCall_returnListingId(1, 10);
+        // Setup all the params
+        map.put("userId", userId);
+        map.put("listingId", listingId1);
+        map.put("quantity", 10L);
+
+        // ADD LISTING ID 1
+        mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is2xxSuccessful());
+
+        // ADD LISTING ID 2
+        map.replace("listingId", listingId2);
+        mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is2xxSuccessful());
+
+        // GET BOTH CART ITEMS WITH DIFFERENT LISTING IDs
+        result = mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        // Ensure that there are 2 cart items returned
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Assert.isTrue(list.size() == 2, "Wrong size response");
+        for (Object ci : list) {
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
+            Assert.isTrue(ci.toString().contains("quantity=10"), "Incorrect quantity");
+        }
+
+        // GET EMPTY ORDER HISTORY
+        result = mockMvc.perform(get("/orderHistory")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        //Ensure it's empty
+        Assert.isTrue(mapper.readValue(result.getResponse().getContentAsByteArray(), List.class).size() == 0, "Wrong size response");
+
+        // CHECKOUT THE CART
+        result = mockMvc.perform(post("/checkout")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // The cart cost is returned
+        Assert.isTrue(mapper.readValue(result.getResponse().getContentAsByteArray(), float.class) >= 0, "Expecting non zero total cart cost");
+
+        // GET CURRENT CART AND ENSURE EMPTY
+        result = mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        Assert.isTrue(mapper.readValue(result.getResponse().getContentAsByteArray(), List.class).size() == 0, "Wrong size response");
+
+        // GET ORDER HISTORY AND ENSURE NON-EMPTY
+        result = mockMvc.perform(get("/orderHistory")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Assert.isTrue(list.size() == 2, "Wrong size response");
+    }
+
+    @Test
     public void addGetChangeGetDeleteCartItems_integration() throws Exception {
         // Needed variables
         MvcResult result;
@@ -71,8 +150,8 @@ public class CartItemRestControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, Long> map = new HashMap<String, Long>();
 
-        long listingId1 = this.makeListingViaApiCall_returnListingId(1);
-        long listingId2 = this.makeListingViaApiCall_returnListingId(1);
+        long listingId1 = this.makeListingViaApiCall_returnListingId(1, 123);
+        long listingId2 = this.makeListingViaApiCall_returnListingId(1, 123);
 
 
         // Setup all the params
@@ -88,7 +167,7 @@ public class CartItemRestControllerTest {
                 )
                 .andExpect(status().is2xxSuccessful());
 
-        // ADD LISTING ID 1
+        // ADD LISTING ID 2
         map.replace("listingId", listingId2);
         mockMvc.perform(post("/cartItems")
                         .header("Authorization", "Bearer " + token)
@@ -98,7 +177,7 @@ public class CartItemRestControllerTest {
                 .andExpect(status().is2xxSuccessful());
 
         // GET BOTH CART ITEMS WITH DIFFERENT LISTING IDs
-        result = mockMvc.perform(get("/cartItems?userID=123")
+        result = mockMvc.perform(get("/cartItems")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -128,7 +207,7 @@ public class CartItemRestControllerTest {
                 .andExpect(status().is2xxSuccessful());
 
         // ENSURE QUANTITIES GOT UPDATED
-        result = mockMvc.perform(get("/cartItems?userID=123")
+        result = mockMvc.perform(get("/cartItems")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -149,7 +228,7 @@ public class CartItemRestControllerTest {
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure only one cart item remains
-        result = mockMvc.perform(get("/cartItems?userID=123")
+        result = mockMvc.perform(get("/cartItems")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -165,7 +244,7 @@ public class CartItemRestControllerTest {
         ).andExpect(status().is2xxSuccessful());
 
         // Ensure empty response
-        result = mockMvc.perform(get("/cartItems?userID=123")
+        result = mockMvc.perform(get("/cartItems")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -178,7 +257,7 @@ public class CartItemRestControllerTest {
         // Need all the params
         HashMap<String, Long> map = new HashMap<String, Long>();
         map.put("userId", userId);
-        map.put("listingId", this.makeListingViaApiCall_returnListingId(123));
+        map.put("listingId", this.makeListingViaApiCall_returnListingId(123, 123));
 
         // Can't delete non-existing cartItems
         mockMvc.perform(delete("/cartItems")
@@ -194,7 +273,7 @@ public class CartItemRestControllerTest {
         // Need all the params
         HashMap<String, Long> map = new HashMap<String, Long>();
         map.put("userId", userId);
-        map.put("listingId", this.makeListingViaApiCall_returnListingId(123));
+        map.put("listingId", this.makeListingViaApiCall_returnListingId(123, 123));
         map.put("quantity", 10L);
 
 
@@ -221,8 +300,17 @@ public class CartItemRestControllerTest {
         // Need all the params
         HashMap<String, Long> map = new HashMap<String, Long>();
         map.put("userId", userId);
-        map.put("listingId", this.makeListingViaApiCall_returnListingId(123));
+        map.put("listingId", this.makeListingViaApiCall_returnListingId(123, 123));
         // NO quantity param
+        mockMvc.perform(put("/cartItems")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is4xxClientError());
+
+        // Quantity param greater than inventory
+        map.put("quantity", 111111L);
         mockMvc.perform(put("/cartItems")
                         .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
@@ -232,7 +320,7 @@ public class CartItemRestControllerTest {
 
         // Can't change cart items that don't exist, even with quantity
         map.replace("userId", 123456789L); //Invalid ID
-        map.put("quantity", 10L);
+        map.replace("quantity", 10L);
         mockMvc.perform(put("/cartItems")
                         .header("Authorization", "Bearer " + token)
                         .contentType(APPLICATION_JSON_UTF8)
@@ -251,7 +339,7 @@ public class CartItemRestControllerTest {
     }
 
 
-    private long makeListingViaApiCall_returnListingId(Integer sellerUserId) throws Exception {
+    private long makeListingViaApiCall_returnListingId(Integer sellerUserId, Integer listingInventory) throws Exception {
         HashMap<String, Object> map = new HashMap<String, Object>();
 
         String isbn = "123ABC";
@@ -260,9 +348,8 @@ public class CartItemRestControllerTest {
         String author = "author";
         String publisher = "publisher";
         String description = "description";
-        Integer inventory = 5;
+        Integer inventory = listingInventory;
         String releaseDate = "05/08/22";
-        String coverImage = "image url";
 
         map.put("sellerUserId", sellerUserId);
         map.put("isbn", isbn);
@@ -273,7 +360,6 @@ public class CartItemRestControllerTest {
         map.put("description", description);
         map.put("inventory", inventory);
         map.put("releaseDate", releaseDate);
-        map.put("coverImage", coverImage);
 
         // Create Listing 1
         MvcResult result = mockMvc.perform(post("/listings")

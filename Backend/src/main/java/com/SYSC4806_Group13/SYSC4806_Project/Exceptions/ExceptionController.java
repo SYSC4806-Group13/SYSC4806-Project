@@ -26,4 +26,9 @@ public class ExceptionController {
     public ResponseEntity<Object> exception(DuplicateException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = InvalidFileTypeException.class)
+    public ResponseEntity<Object> exception(InvalidFileTypeException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

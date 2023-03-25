@@ -43,10 +43,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            log.error("Could not set user authentication in security context", ex);
-            response.sendError(401, "User not authenticated");
+            log.error("User Could not be Authenticated. JWT token error or No Token", ex);
         }
-
         filterChain.doFilter(request, response);
     }
 

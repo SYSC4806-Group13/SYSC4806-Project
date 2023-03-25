@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         jsr250Enabled = true,
         prePostEnabled = true
 )
-public class SecurityConfig   {
+public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -53,6 +53,7 @@ public class SecurityConfig   {
     /**
      * The security Filter chain. This is the set of instructions filters / methods that will be run on every request
      * This is for security purposes
+     *
      * @param http The incoming http request
      * @return the http request Security Filter chain ontop of the request
      * @throws Exception
@@ -86,9 +87,13 @@ public class SecurityConfig   {
                         "/*/*.css",
                         "/*/*.js")
                 .permitAll()
-                .requestMatchers("/auth/**", "/oauth2/**") //End points for dealing with auth2
-                .permitAll()
+                .and()
+                .authorizeRequests()
                 .requestMatchers(HttpMethod.GET, "/listings")
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/covers/*")
+                .permitAll()
+                .requestMatchers("/auth/**", "/oauth2/**") //End points for dealing with auth2
                 .permitAll()
                 .anyRequest()
                 .authenticated()

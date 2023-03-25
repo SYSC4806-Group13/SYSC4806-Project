@@ -11,7 +11,7 @@ import { buildListings } from "src/utils/listings";
 import "src/styles/SellerListing.css";
 import { LISTING } from "src/constants/endpoints";
 
-export interface ISellerListingsProps {}
+export interface ISellerListingsProps { }
 
 export default function SellerListings(props: ISellerListingsProps) {
   const [addListingDialog, setaddListingDialog] = React.useState(false);
@@ -34,6 +34,7 @@ export default function SellerListings(props: ISellerListingsProps) {
   }, [sendRequest, addListingDialog]);
 
   return (
+
     <PageHeader headerTitle="Seller Listings">
       <Box textAlign={"center"} mt={2}>
         <Button
@@ -50,11 +51,12 @@ export default function SellerListings(props: ISellerListingsProps) {
       <DialogBox
         isDialogOpen={addListingDialog}
         handleCloseDialog={closeDialog}
+        title="Add Listing"
       >
         <SellerListingForm
           handleCloseDialog={closeDialog}
           sellerId={sellerId}
-        />
+          isEdit={false} />
       </DialogBox>
     </PageHeader>
   );

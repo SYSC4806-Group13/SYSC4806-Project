@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { UserLoginContext } from "src/context/userLoginContext";
-import PageHeader from "../PageHeader";
+import PageHeader from "src/components/PageHeader/PageHeader";
 
 const mockedUsedNavigate = jest.fn();
 
@@ -28,9 +28,11 @@ describe("Testing PageHeader", () => {
         value={{
           isLoggedIn: true,
           jwtToken: "state.jwtToken",
+          profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
           logOut: () => {},
           logIn: () => {},
           setToken: () => {},
+          setProfile: () => {},
         }}
       >
         <PageHeader headerTitle="Test">
@@ -49,9 +51,11 @@ describe("Testing PageHeader", () => {
         value={{
           isLoggedIn: false,
           jwtToken: "state.jwtToken",
+          profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
           logOut: () => {},
           logIn: () => {},
           setToken: () => {},
+          setProfile: () => {},
         }}
       >
         <PageHeader headerTitle="Test">

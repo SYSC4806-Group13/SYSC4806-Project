@@ -24,10 +24,6 @@ public class Listing {
     private String releaseDate;
     private Boolean isActive;
 
-    // TODO needs to be updated once we handle file upload
-    @Column(nullable = true, length = 64)
-    private String coverImage;
-
     public Listing(Long sellerUserId,
                    String ISBN,
                    String title,
@@ -37,8 +33,7 @@ public class Listing {
                    String description,
                    Integer inventory,
                    String releaseDate,
-                   Boolean isActive,
-                   String coverImage) {
+                   Boolean isActive) {
         this.sellerUserId = sellerUserId;
         this.ISBN = ISBN;
         this.title = title;
@@ -49,7 +44,6 @@ public class Listing {
         this.inventory = inventory;
         this.releaseDate = releaseDate;
         this.isActive = isActive;
-        this.coverImage = coverImage;
     }
 
     public Listing() {
@@ -142,13 +136,5 @@ public class Listing {
 
     public void setActive(Boolean active) {
         isActive = active;
-    }
-
-    public String getCoverImage() {
-        return coverImage;
-    }
-
-    public void setCoverImage(String coverImage) {
-        this.coverImage = coverImage;
     }
 }

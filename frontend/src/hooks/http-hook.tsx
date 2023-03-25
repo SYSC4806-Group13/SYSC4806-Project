@@ -9,8 +9,10 @@ export const useHttpClient = () => {
   const [error, setError] = useState(null);
   const { logOut } = useContext(UserLoginContext);
 
+  const host = "http://localhost:8080";
+
   const sendRequest = useCallback(
-    async (path = "", method: httpMethod = "GET", body: {}) => {
+    async (path = "", method: httpMethod = "GET", body: {}, queryParameterString: string = "") => {
       setIsLoading(true);
 
       let requestHeaders = isAuthenticationNeeded(method, path)
@@ -18,7 +20,8 @@ export const useHttpClient = () => {
         : {};
 
       const host = "http://localhost:8080";
-      const url = host + path;
+      const url = host + path + queryParameterString;
+
       let res = null;
       let config = {
         headers: requestHeaders,
@@ -32,10 +35,12 @@ export const useHttpClient = () => {
             res = await axios.post(url, body, config);
             break;
           case "DELETE":
-            res = await axios.delete(url, {
-              headers: requestHeaders,
-              data: { body },
-            });
+            res = await axios.delete(url,
+              {
+                headers: requestHeaders,
+                data: body,
+              }
+            );
             break;
           case "PATCH":
             res = await axios.patch(url, body, config);
@@ -63,5 +68,5 @@ export const useHttpClient = () => {
     setError(null);
   };
 
-  return { isLoading, error, sendRequest, clearError };
+  return { host, isLoading, error, sendRequest, clearError };
 };
