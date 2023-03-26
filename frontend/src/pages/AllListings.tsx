@@ -6,21 +6,34 @@ import PageHeader from "src/components/PageHeader/PageHeader";
 import { LISTING } from "src/constants/endpoints";
 import { useHttpClient } from "src/hooks/http-hook";
 import { buildListings } from "src/utils/listings";
+import { RECOMMENDATION } from "src/constants/endpoints";
+import { UserLoginContext } from "src/context/userLoginContext";
 import RecommendedCarousel from 'src/components/Recommended/RecommendedCarousel'
 
 export interface IAllListingsProps { }
 
 export default function AllListings(props: IAllListingsProps) {
     const [listings, setListings] = React.useState([]);
+    const [recommendedListings, setRecommendedListings] = React.useState([])
     const { sendRequest } = useHttpClient();
+    const { isLoggedIn, profile } = React.useContext(UserLoginContext);
     React.useEffect(() => {
         const getSellerItems = async () => {
             let items = await sendRequest(LISTING, "GET", {});
             items = buildListings(items);
             setListings(items);
         };
+        
+        const getRecommendedItems = async () => {
+            if (isLoggedIn) {
+                let recommendations = await sendRequest(RECOMMENDATION,"GET", {}, `/${profile.id}`);
+                recommendations = buildListings(recommendations);
+                setRecommendedListings(recommendations)
+            }
+        };
+        getRecommendedItems();
         getSellerItems();
-    }, [sendRequest]);
+    }, [sendRequest, isLoggedIn, profile]);
     return (
         <React.Fragment>
             <PageHeader headerTitle='Listing'>
@@ -35,7 +48,7 @@ export default function AllListings(props: IAllListingsProps) {
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <RecommendedCarousel listings={listings} />
+                        <RecommendedCarousel listings={recommendedListings} />
                     </AccordionDetails>
                 </Accordion>
                 <Accordion>

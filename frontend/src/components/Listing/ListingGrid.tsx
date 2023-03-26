@@ -80,18 +80,7 @@ export default function ListingGrid({ listings }: IListingGridProps) {
                   <Grow in={true} timeout={1000}>
                     <Paper>
                       <ListingCard
-                        cardName={currentListing.cardName}
-                        author={currentListing.author}
-                        price={currentListing.price}
-                        image={currentListing.image}
-                        alt={currentListing.alt}
-                        description={currentListing.description}
-                        inventory={currentListing.inventory}
-                        listingId={currentListing.listingId}
-                        isbn={currentListing.isbn}
-                        publisher={currentListing.publisher}
-                        releaseDate={currentListing.releaseDate}
-                        title={currentListing.title}
+                        { ...currentListing }
                       />
                     </Paper>
                   </Grow>

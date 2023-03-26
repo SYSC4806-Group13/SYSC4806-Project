@@ -20,6 +20,7 @@ import AddToCartButton from 'src/components/Listing/AddToCartButton';
 export interface IListingCardProps {
   cardName: string,
   author: string,
+  title: string,
   price: string,
   image: string,
   alt: string,

@@ -13,7 +13,14 @@ export interface IRecommendedCarouselProps {
         author: string,
         price: string,
         image: string,
-        alt: string
+        alt: string,
+        title: string,
+        listingId : string,
+        isbn: string,
+        publisher: string,
+        description: string,
+        inventory: string,
+        releaseDate: string
     }>
 }
 
@@ -57,10 +64,12 @@ export default function RecommendedCarousel(props: IRecommendedCarouselProps) {
             customRightArrow={<RightArrow />}
             customLeftArrow={<LeftArrow />}
         >
-            {props.listings.map(x => (
-                <Grow in={true} timeout={1000} key={x.cardName}>
+            {props.listings.map((currentListing, i) => (
+                <Grow in={true} timeout={1000} key={currentListing.cardName + "_" + i}>
                     <Paper>
-                        <ListingCard carousel cardName={x.cardName} author={x.author} price={x.price} image={x.image} alt={x.alt} />
+                    <ListingCard
+                        { ...currentListing }
+                      />
                     </Paper>
                 </Grow>
             ))}
