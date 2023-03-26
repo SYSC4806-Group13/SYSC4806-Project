@@ -7,6 +7,7 @@ import '@testing-library/jest-dom'
 import axios from 'axios';
 // the component to test
 import RecommendedCarousel from 'src/components/Recommended/RecommendedCarousel';
+import { BrowserRouter } from 'react-router-dom';
 
 jest.mock("axios");
 
@@ -26,11 +27,15 @@ describe('Carousel', () => {
   beforeAll(() => resize(500)); // mobile
 
   test('no listing found', async () => {
-    render(<RecommendedCarousel listings={[]} />)
+    render(
+      <BrowserRouter>
+        <RecommendedCarousel listings={[]} />
+      </BrowserRouter>
+    )
 
     await waitFor(() => {
       expect(
-        screen.getByText("No listings found")
+        screen.getByText("No recommendations found")
       ).toBeInTheDocument();
     });
   });
@@ -39,17 +44,21 @@ describe('Carousel', () => {
     (axios.get as jest.Mock).mockResolvedValue({
       data: [{
         cardName: "Test Card",
+        listingId: 1,
         author: "test",
         price: "test",
-        image: "test",
-        alt: "Test Alt"
+        alt: "test"
       }]
     })
     const res = await axios.get('/listing');
-    render(<RecommendedCarousel listings={res.data} />)
-
+    render(
+      <BrowserRouter>
+        <RecommendedCarousel listings={res.data} />
+      </BrowserRouter>
+    )
+  
     await waitFor(async () => {
-      const listings = await screen.findAllByAltText("Test Alt")
+      const listings = await screen.findAllByText("Test Card")
       expect(listings).toHaveLength(1);
     });
   });
