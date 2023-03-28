@@ -34,10 +34,21 @@ export default function AllListings(props: IAllListingsProps) {
         getRecommendedItems();
         getSellerItems();
     }, [sendRequest, isLoggedIn, profile]);
+
+    const [recommenedAccoridanExpanded, setRecommenedAccoridanExpanded] = React.useState(true)
+    const [listingsAccoridanExpanded, setListingsAccoridanExpanded] = React.useState(true)
+
+    const handleAccoridanToggle = (identifier: string) => () => {
+        if (identifier === 'recommended') {
+            setRecommenedAccoridanExpanded(!recommenedAccoridanExpanded)
+        } else if (identifier === 'listings') {
+            setListingsAccoridanExpanded(!listingsAccoridanExpanded)
+        }
+      };
     return (
         <React.Fragment>
             <PageHeader headerTitle='Listing'>
-                <Accordion>
+                <Accordion expanded={recommenedAccoridanExpanded} onChange={handleAccoridanToggle('recommended')}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
@@ -51,7 +62,7 @@ export default function AllListings(props: IAllListingsProps) {
                         <RecommendedCarousel listings={recommendedListings} />
                     </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                <Accordion expanded={listingsAccoridanExpanded} onChange={handleAccoridanToggle('listings')}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
