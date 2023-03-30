@@ -37,7 +37,6 @@ export default function OrderHistory() {
     const getSellerItems = async () => {
       let response = await sendRequest(ORDER_HISTORY, "GET", {},);
       setOrderHistoryItems(response);
-      console.log(response);
     };
     getSellerItems();
   }, [sendRequest,]);

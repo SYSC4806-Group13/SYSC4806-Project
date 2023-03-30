@@ -147,7 +147,7 @@ public class ListingRestController {
         }
 
         listingRepo.save(listing);
-        CartItemRestController.updateListingInventory(listing.getListingId(), cartItemRepo);
+        CartItemRestController.updateAssociatedCartItems_listingInventoryUpdated(listing.getListingId(), cartItemRepo);
         return map;
     }
 
@@ -158,7 +158,7 @@ public class ListingRestController {
             listing.get().setActive(false);
             listing.get().setInventory(0);
             listingRepo.save(listing.get());
-            CartItemRestController.updateListingInventory(listing.get().getListingId(), cartItemRepo);
+            CartItemRestController.updateAssociatedCartItems_listingInventoryUpdated(listing.get().getListingId(), cartItemRepo);
             return listing.get();
         } else {
             throw new NotFoundException("Listing with id [" + id + "] cannot be found");

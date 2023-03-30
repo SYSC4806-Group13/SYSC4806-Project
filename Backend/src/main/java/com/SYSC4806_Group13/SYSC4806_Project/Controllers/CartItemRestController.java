@@ -51,7 +51,7 @@ public class CartItemRestController {
         for (CartItem ci : cartItems) {
             totalCartCost += ci.getTotalCartItemPriceAtPurchase();
             cartItemRepo.save(ci);
-            updateListingInventory(ci.getListing().getListingId(), cartItemRepo);
+            updateAssociatedCartItems_listingInventoryUpdated(ci.getListing().getListingId(), cartItemRepo);
         }
         return totalCartCost;
     }
@@ -150,7 +150,7 @@ public class CartItemRestController {
         return map;
     }
 
-    public static void updateListingInventory(Long listingId, CartItemRepository cartItemRepo) {
+    public static void updateAssociatedCartItems_listingInventoryUpdated(Long listingId, CartItemRepository cartItemRepo) {
         for (CartItem ci : cartItemRepo.findAllByListing_ListingIdAndPurchaseDateTimeIsNull(listingId)) {
             int newInventory = ci.getListing().getInventory();
             if (newInventory <= 0) {
