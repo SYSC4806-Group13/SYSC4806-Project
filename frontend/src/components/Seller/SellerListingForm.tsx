@@ -37,7 +37,10 @@ export default function SellerListingForm(props: ISellerListingFormProps) {
     inventory:
       props.formValues && props.isEdit ? props.formValues?.inventory : 1,
     price: props.formValues && props.isEdit ? props.formValues?.price : 0.0,
-    releaseDate: new Date().toISOString().slice(0, 10),
+    releaseDate:
+      props.formValues && props.isEdit
+        ? props.formValues?.releaseDate
+        : new Date().toISOString().slice(0, 10),
   };
 
   const [coverFile, setCoverFile] = React.useState<File>();
