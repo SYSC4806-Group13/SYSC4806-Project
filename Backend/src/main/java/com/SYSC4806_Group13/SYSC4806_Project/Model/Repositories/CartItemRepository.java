@@ -24,6 +24,11 @@ public interface CartItemRepository extends CrudRepository<CartItem, Long> {
     List<CartItem> findAllByUserIdAndPurchaseDateTimeIsNotNullOrderByPurchaseDateTimeDesc(long userId);
 
     /**
+     * Retrieves all active cart items for the given listing ID
+     */
+    List<CartItem> findAllByListing_ListingIdAndPurchaseDateTimeIsNull(long listingId);
+
+    /**
      * Retrieves cart item that is not checked out
      */
     CartItem findCartItemByUserIdAndListing_ListingIdAndPurchaseDateTimeIsNull(long userId, long listingId);
