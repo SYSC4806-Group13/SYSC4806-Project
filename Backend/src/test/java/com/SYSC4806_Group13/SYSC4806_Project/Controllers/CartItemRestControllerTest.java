@@ -64,6 +64,111 @@ public class CartItemRestControllerTest {
     }
 
     @Test
+    void inventoryChangeTest_integration() throws Exception {
+        // Needed variables
+        MvcResult result;
+        List list;
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, Long> map = new HashMap<String, Long>();
+
+        long listingId1 = this.makeListingViaApiCall_returnListingId(1, 10);
+
+        // Setup all the params
+        map.put("listingId", listingId1);
+        map.put("quantity", 7L);
+
+        // ADD LISTING ID 1 FOR USER 1
+        mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is2xxSuccessful());
+
+        // GET CART ITEMS FOR USER
+        result = mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // Ensure that the cart item is there and it has a quantity of 7
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Assert.isTrue(list.size() == 1, "Wrong size response");
+        for (Object ci : list) {
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
+            Assert.isTrue(ci.toString().contains("quantity=7"), "Incorrect quantity");
+        }
+
+        //Change inventory to be less than the cart quantity
+        editListingViaApiCall(1, listingId1);
+        // GET CART ITEMS FOR USER AGAIN
+        result = mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // Quantity should have been reduced to 1 in response to inventory change
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Assert.isTrue(list.size() == 1, "Wrong size response");
+        for (Object ci : list) {
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
+            Assert.isTrue(ci.toString().contains("quantity=1"), "Incorrect quantity");
+        }
+
+        //Change inventory to be out of stock at zero
+        editListingViaApiCall(0, listingId1);
+        // GET CART ITEMS FOR USER AGAIN
+        result = mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // Going out of stock should auto remove from cart
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Assert.isTrue(list.size() == 0, "Wrong size response");
+        for (Object ci : list) {
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
+            Assert.isTrue(ci.toString().contains("quantity=1"), "Incorrect quantity");
+        }
+
+        //Change inventory to be in stock again
+        editListingViaApiCall(1234567, listingId1);
+        // ADD TO CART
+        mockMvc.perform(post("/cartItems")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is2xxSuccessful());
+
+        // GET CART ITEMS FOR USER
+        result = mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // Ensure that the cart item is there and it has a quantity of 7
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Assert.isTrue(list.size() == 1, "Wrong size response");
+        for (Object ci : list) {
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
+            Assert.isTrue(ci.toString().contains("quantity=7"), "Incorrect quantity");
+        }
+
+
+        // Delete/deactivate the listing
+        deleteListingViaApiCall(listingId1);
+        // GET CART ITEMS FOR USER AGAIN
+        result = mockMvc.perform(get("/cartItems")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+        // Deleted listings are auto removed from carts
+        list = mapper.readValue(result.getResponse().getContentAsByteArray(), List.class);
+        Assert.isTrue(list.size() == 0, "Wrong size response");
+        for (Object ci : list) {
+            Assert.isTrue(ci.toString().contains("listingId="), "Incorrect listingId");
+            Assert.isTrue(ci.toString().contains("quantity=1"), "Incorrect quantity");
+        }
+    }
+
+    @Test
     void checkoutTest_integration() throws Exception {
         // Needed variables
         MvcResult result;
@@ -342,24 +447,15 @@ public class CartItemRestControllerTest {
     private long makeListingViaApiCall_returnListingId(Integer sellerUserId, Integer listingInventory) throws Exception {
         HashMap<String, Object> map = new HashMap<String, Object>();
 
-        String isbn = "123ABC";
-        String title = "title";
-        String price = "1.5";
-        String author = "author";
-        String publisher = "publisher";
-        String description = "description";
-        Integer inventory = listingInventory;
-        String releaseDate = "05/08/22";
-
         map.put("sellerUserId", sellerUserId);
-        map.put("isbn", isbn);
-        map.put("title", title);
-        map.put("price", price);
-        map.put("author", author);
-        map.put("publisher", publisher);
-        map.put("description", description);
-        map.put("inventory", inventory);
-        map.put("releaseDate", releaseDate);
+        map.put("isbn", "123ABC");
+        map.put("title", "title");
+        map.put("price", "1.5");
+        map.put("author", "author");
+        map.put("publisher", "publisher");
+        map.put("description", "description");
+        map.put("inventory", listingInventory);
+        map.put("releaseDate", "05/08/22");
 
         // Create Listing 1
         MvcResult result = mockMvc.perform(post("/listings")
@@ -372,6 +468,34 @@ public class CartItemRestControllerTest {
 
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(result.getResponse().getContentAsByteArray(), Listing.class).getListingId();
+    }
 
+    private void editListingViaApiCall(long listingInventory, long listingId) throws Exception {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        map.put("listingId", listingId);
+        map.put("inventory", listingInventory);
+
+        // Update Listing
+        mockMvc.perform(put("/listings")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    private void deleteListingViaApiCall(long listingId) throws Exception {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        map.put("listingId", listingId);
+
+        // Update Listing
+        mockMvc.perform(delete("/listings/" + listingId)
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(APPLICATION_JSON_UTF8)
+                        .content(asJsonString(map))
+                )
+                .andExpect(status().is2xxSuccessful());
     }
 }
