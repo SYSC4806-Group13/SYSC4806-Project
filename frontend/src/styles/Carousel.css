@@ -1,0 +1,17 @@
+.arrow {
+    position: absolute;
+    top: 50%;
+    color: white
+  }
+  
+  .right {
+    right: 0;
+  }
+  
+  .left {
+    left: 0;
+  }
+  
+  .carousel {
+    margin: 1rem auto;
+  }

@@ -19,11 +19,12 @@ import AddToCartButton from 'src/components/Listing/AddToCartButton';
 
 export interface IListingCardProps {
   cardName: string,
-  title: string,
   author: string,
+  title: string,
   price: string,
   image: string,
   alt: string,
+  carousel?: boolean,
   listingId: string,
   isbn: string,
   publisher: string,
@@ -68,7 +69,7 @@ export default function ListingCard(props: IListingCardProps) {
           alt={props.alt}
           className="image"
         />
-        <CardContent>
+        {!props.carousel && <CardContent>
           <Typography variant="h3">
             {capitalize(props.cardName)}
           </Typography>
@@ -78,7 +79,7 @@ export default function ListingCard(props: IListingCardProps) {
           <Typography variant="h4" color="text.secondary">
             ${props.price}
           </Typography>
-        </CardContent>
+        </CardContent> }
       </CardActionArea>
 
       <CardActions className='align-center'>
