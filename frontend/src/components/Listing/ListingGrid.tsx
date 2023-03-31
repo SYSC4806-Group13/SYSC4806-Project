@@ -31,6 +31,37 @@ export interface IListingGridProps {
   }>;
 }
 
+const sortMenuOptions = [
+  {
+    sortingType: "Alphabetic",
+    text: "Alphabetic (A-Z)",
+  },
+  {
+    sortingType: "ReverseAlphabetic",
+    text: "Reverse Alphabetic (Z-A)",
+  },
+  {
+    sortingType: "Expensive",
+    text: "Price (Most expensive)",
+  },
+  {
+    sortingType: "Cheapest",
+    text: "Price (Cheapest)",
+  },
+  {
+    sortingType: "AuthorAlphabetic",
+    text: "Author Alphabetic",
+  },
+  {
+    sortingType: "ReleaseDateOldest",
+    text: "Release Date (Oldest to Newest)",
+  },
+  {
+    sortingType: "ReleaseDateNewest",
+    text: "Release Date (Newest to Oldest)",
+  },
+];
+
 export default function ListingGrid({ listings }: IListingGridProps) {
   const [sortingType, setSortingType] = React.useState("Alphabetic");
   const sortListings = (listings: Array<any>) => {
@@ -82,48 +113,16 @@ export default function ListingGrid({ listings }: IListingGridProps) {
                 id: "sortListings",
               }}
             >
-              <MenuItem
-                value={"Alphabetic"}
-                onClick={() => setSortingType("Alphabetic")}
-              >
-                Alphabetic (A-Z)
-              </MenuItem>
-              <MenuItem
-                value={"ReverseAlphabetic"}
-                onClick={() => setSortingType("ReverseAlphabetic")}
-              >
-                Reverse Alphabetic (Z-A)
-              </MenuItem>
-              <MenuItem
-                value={"Expensive"}
-                onClick={() => setSortingType("Expensive")}
-              >
-                Price (Most expensive)
-              </MenuItem>
-              <MenuItem
-                value={"Cheapest"}
-                onClick={() => setSortingType("Cheapest")}
-              >
-                Price (Cheapest)
-              </MenuItem>
-              <MenuItem
-                value={"AuthorAlphabetic"}
-                onClick={() => setSortingType("AuthorAlphabetic")}
-              >
-                Author Alphabetic
-              </MenuItem>
-              <MenuItem
-                value={"ReleaseDateOldest"}
-                onClick={() => setSortingType("ReleaseDateOldest")}
-              >
-                Release Date (Oldest to Newest)
-              </MenuItem>
-              <MenuItem
-                value={"ReleaseDateNewest"}
-                onClick={() => setSortingType("ReleaseDateNewest")}
-              >
-                Release Date (Newest to Oldest)
-              </MenuItem>
+              {sortMenuOptions.map((menuItem) => {
+                return (
+                  <MenuItem
+                    value={menuItem.sortingType}
+                    onClick={() => setSortingType(menuItem.sortingType)}
+                  >
+                    {menuItem.text}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
           <Grid
