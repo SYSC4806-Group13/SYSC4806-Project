@@ -173,4 +173,51 @@ public class CartItemModelTest {
 
         cartItemRepo.deleteAll();
     }
+
+    @Test
+    void testAllActiveCartItemsForListing() {
+        cartItemRepo.deleteAll();
+        Long userId = 123L;
+        Long userId2 = 1234L;
+
+        Listing listing1 = new Listing();
+        listing1.setPrice(123.45f);
+        listing1.setInventory(123);
+        listingRepo.save(listing1);
+        Listing listing2 = new Listing();
+        listing2.setPrice(123.45f);
+        listing2.setInventory(123);
+        listingRepo.save(listing2);
+
+
+        CartItem ci1 = new CartItem(userId, listing1, 1L);
+        cartItemRepo.save(ci1);
+
+        // Different listing
+        CartItem ci2 = new CartItem(userId, listing2, 1L);
+        cartItemRepo.save(ci2);
+
+        //Different user ID from previous 2
+        CartItem ci3 = new CartItem(userId2, listing1, 1L);
+        cartItemRepo.save(ci3);
+
+        // All unchecked out, get proper counts
+        Assert.isTrue(cartItemRepo.findAllByListing_ListingIdAndPurchaseDateTimeIsNull(listing1.getListingId()).size() == 2, "Wrong cartItem count");
+        Assert.isTrue(cartItemRepo.findAllByListing_ListingIdAndPurchaseDateTimeIsNull(listing2.getListingId()).size() == 1, "Wrong cartItem count");
+
+        // Checkout and it should no longer be returned
+        ci1.checkout();
+        cartItemRepo.save(ci1);
+        Assert.isTrue(cartItemRepo.findAllByListing_ListingIdAndPurchaseDateTimeIsNull(listing1.getListingId()).size() == 1, "Wrong cartItem count");
+        Assert.isTrue(cartItemRepo.findAllByListing_ListingIdAndPurchaseDateTimeIsNull(listing2.getListingId()).size() == 1, "Wrong cartItem count");
+
+
+        // Checkout everything and it should be zero sized
+        ci2.checkout();
+        cartItemRepo.save(ci2);
+        ci3.checkout();
+        cartItemRepo.save(ci3);
+        Assert.isTrue(cartItemRepo.findAllByListing_ListingIdAndPurchaseDateTimeIsNull(listing1.getListingId()).size() == 0, "Wrong cartItem count");
+        Assert.isTrue(cartItemRepo.findAllByListing_ListingIdAndPurchaseDateTimeIsNull(listing2.getListingId()).size() == 0, "Wrong cartItem count");
+    }
 }
