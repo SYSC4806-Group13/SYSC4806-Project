@@ -4,27 +4,30 @@ import 'react-multi-carousel/lib/styles.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { Grow, Paper, Typography } from '@mui/material';
+import { RECOMMENDATION } from "src/constants/endpoints";
+import { useHttpClient } from "src/hooks/http-hook";
+import { UserLoginContext } from "src/context/userLoginContext";
 import ListingCard from 'src/components/Listing/ListingCard';
+import { buildListings } from "src/utils/listings";
 import 'src/styles/Carousel.css'
 
 export interface IRecommendedCarouselProps {
-    listings: Array<{
-        cardName: string,
-        author: string,
-        price: string,
-        image: string,
-        alt: string,
-        title: string,
-        listingId : string,
-        isbn: string,
-        publisher: string,
-        description: string,
-        inventory: string,
-        releaseDate: string
-    }>
 }
 
 export default function RecommendedCarousel(props: IRecommendedCarouselProps) {
+    const { sendRequest } = useHttpClient();
+    const { isLoggedIn, profile } = React.useContext(UserLoginContext);
+    const [recommendedListings, setRecommendedListings] = React.useState([])
+    React.useEffect(() => {
+        const getRecommendedItems = async () => {
+            if (isLoggedIn) {
+                let recommendations = await sendRequest(RECOMMENDATION,"GET", {}, `/${profile.id}`);
+                recommendations = buildListings(recommendations);
+                setRecommendedListings(recommendations)
+            }
+        };
+        getRecommendedItems();
+    }, [sendRequest, isLoggedIn, profile])
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -46,7 +49,7 @@ export default function RecommendedCarousel(props: IRecommendedCarouselProps) {
     };
     const RightArrow = (arrowProps: any) => { const { carouselState, children, ...restArrowProps } = arrowProps; return (<ArrowForwardIosIcon fontSize='large' className='arrow right' {...restArrowProps} />); };
     const LeftArrow = (arrowProps: any) => { const { carouselState, children, ...restArrowProps } = arrowProps; return (<ArrowBackIosNewIcon fontSize='large' className='arrow left' {...restArrowProps} />); };
-    if (props.listings.length === 0) {
+    if (recommendedListings.length === 0) {
         return (
             <Typography variant="h4" align='center' color='text.secondary' mt={2}>
                 No recommendations found
@@ -64,7 +67,7 @@ export default function RecommendedCarousel(props: IRecommendedCarouselProps) {
             customRightArrow={<RightArrow />}
             customLeftArrow={<LeftArrow />}
         >
-            {props.listings.map((currentListing, i) => (
+            {recommendedListings.map((currentListing : any, i) => (
                 <Grow in={true} timeout={1000} key={currentListing.cardName + "_" + i}>
                     <Paper>
                     <ListingCard
