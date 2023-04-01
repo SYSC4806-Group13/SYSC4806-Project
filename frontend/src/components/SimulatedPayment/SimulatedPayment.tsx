@@ -1,13 +1,9 @@
 import * as React from "react";
 import { useHttpClient } from "src/hooks/http-hook";
-import {
-  Button,
-  Typography,
-} from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { CART_ITEMS, CHECKOUT } from "src/constants/endpoints";
 import PageHeader from "src/components/PageHeader/PageHeader";
-
 
 export default function SimulatedPayment() {
   const { sendRequest } = useHttpClient();
@@ -16,7 +12,7 @@ export default function SimulatedPayment() {
 
   React.useEffect(() => {
     const getSellerItems = async () => {
-      let cartItems = await sendRequest(CART_ITEMS, "GET", {},);
+      let cartItems = await sendRequest(CART_ITEMS, "GET", {});
       setCartSize(cartItems.length);
     };
     getSellerItems();
@@ -30,9 +26,12 @@ export default function SimulatedPayment() {
   return (
     <PageHeader headerTitle="Payment">
       <>
-        {cartSize !== 0 &&
+        {cartSize !== 0 && (
           <>
-            <Typography>Imagine that you just entered your billing details and shipping information</Typography>
+            <Typography>
+              Imagine that you just entered your billing details and shipping
+              information
+            </Typography>
             <Button
               variant="contained"
               color="success"
@@ -42,12 +41,12 @@ export default function SimulatedPayment() {
               Confirm Payment
             </Button>
           </>
-        }
-        {cartSize === 0 &&
+        )}
+        {cartSize === 0 && (
           <>
             <Typography>Error: Cannot pay with an empty cart</Typography>
           </>
-        }
+        )}
       </>
     </PageHeader>
   );

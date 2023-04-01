@@ -11,13 +11,13 @@ export type userDispatch = {
   setProfile: (profile: profileType) => void;
 };
 
-  export type httpAuthenticationURL = {
-    "GET": string[],
-    "POST": string[],
-    "DELETE": string[],
-    "PUT": string[],
-    "PATCH" : string[],
-  }
+export type httpAuthenticationURL = {
+  GET: string[];
+  POST: string[];
+  DELETE: string[];
+  PUT: string[];
+  PATCH: string[];
+};
 
 export type userLoginContextState = userValue & userDispatch;
 

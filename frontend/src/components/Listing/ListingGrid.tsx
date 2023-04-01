@@ -135,9 +135,7 @@ export default function ListingGrid({ listings }: IListingGridProps) {
                 <Grid item xs={1} sm={4} md={4} key={uuidv4()}>
                   <Grow in={true} timeout={1000}>
                     <Paper>
-                      <ListingCard
-                        { ...currentListing }
-                      />
+                      <ListingCard {...currentListing} />
                     </Paper>
                   </Grow>
                 </Grid>

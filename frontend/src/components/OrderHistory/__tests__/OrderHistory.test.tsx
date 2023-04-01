@@ -8,7 +8,6 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-
 describe("Testing PageHeader", () => {
   it("renders", () => {
     render(
@@ -16,11 +15,11 @@ describe("Testing PageHeader", () => {
         value={{
           isLoggedIn: true,
           jwtToken: "state.jwtToken",
-          logOut: () => { },
-          logIn: () => { },
-          setToken: () => { },
+          logOut: () => {},
+          logIn: () => {},
+          setToken: () => {},
           profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
-          setProfile: () => { },
+          setProfile: () => {},
         }}
       >
         <OrderHistory />
@@ -30,4 +29,4 @@ describe("Testing PageHeader", () => {
 
     expect(pageContent).toBeInTheDocument();
   });
-})
+});

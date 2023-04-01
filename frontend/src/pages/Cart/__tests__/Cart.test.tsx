@@ -8,7 +8,6 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-
 describe("Testing SimulatedPayment", () => {
   it("renders", () => {
     render(
@@ -16,11 +15,11 @@ describe("Testing SimulatedPayment", () => {
         value={{
           isLoggedIn: true,
           jwtToken: "state.jwtToken",
-          logOut: () => { },
-          logIn: () => { },
-          setToken: () => { },
+          logOut: () => {},
+          logIn: () => {},
+          setToken: () => {},
           profile: { name: "kevin", id: "1", email: "email", isSeller: "true" },
-          setProfile: () => { },
+          setProfile: () => {},
         }}
       >
         <Cart />

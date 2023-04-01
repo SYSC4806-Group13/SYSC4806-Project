@@ -127,7 +127,9 @@ export default function PageHeader(props: IPageHeaderProps) {
                     <MenuItem onClick={handleMyAccount}>My Listings</MenuItem>
                   )}
                   <MenuItem onClick={handleMyProfile}>My Profile</MenuItem>
-                  <MenuItem onClick={handleOrderHistory}>Order History</MenuItem>
+                  <MenuItem onClick={handleOrderHistory}>
+                    Order History
+                  </MenuItem>
                   <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                 </Menu>
               </>
