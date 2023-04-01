@@ -4,9 +4,8 @@ import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.BadAttributeException;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.MissingAttributeException;
 import com.SYSC4806_Group13.SYSC4806_Project.Exceptions.NotFoundException;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.DataModel.Listing;
+import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.CartItemRepository;
 import com.SYSC4806_Group13.SYSC4806_Project.Model.Repositories.ListingRepository;
-import com.SYSC4806_Group13.SYSC4806_Project.Security.CurrentUser;
-import com.SYSC4806_Group13.SYSC4806_Project.Security.UserPrincipal;
 import org.springframework.data.util.Streamable;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,27 +21,29 @@ import static com.SYSC4806_Group13.SYSC4806_Project.Utilities.ControllerValidati
 @RestController
 public class ListingRestController {
 
-    private final ListingRepository repo;
+    private final ListingRepository listingRepo;
+    private final CartItemRepository cartItemRepo;
 
-    public ListingRestController(ListingRepository repo) {
-        this.repo = repo;
+    public ListingRestController(ListingRepository listingRepo, CartItemRepository cartItemRepo) {
+        this.listingRepo = listingRepo;
+        this.cartItemRepo = cartItemRepo;
     }
 
     @GetMapping("/listings")
     public List<Listing> getListings(@RequestParam(value = "sellerUserId", required = false) Long sellerUserId) {
         if (sellerUserId == null) {
             // Return all listings
-            Iterable<Listing> iterable = repo.findAll();
+            Iterable<Listing> iterable = listingRepo.findAll();
             return Streamable.of(iterable).toList();
         } else {
             // Return listings matching given sellerUserId
-            return repo.findAllBySellerUserId(sellerUserId);
+            return listingRepo.findAllBySellerUserId(sellerUserId);
         }
     }
 
     @GetMapping("/listings/{listingId}")
     public Listing getListing(@PathVariable String listingId) {
-        Optional<Listing> listing = repo.findById(Long.parseLong(listingId));
+        Optional<Listing> listing = listingRepo.findById(Long.parseLong(listingId));
         if (listing.isPresent()) {
             return listing.get();
         } else {
@@ -91,7 +92,7 @@ public class ListingRestController {
                 isActive
         );
 
-        repo.save(listing);
+        listingRepo.save(listing);
 
         return listing;
     }
@@ -101,12 +102,12 @@ public class ListingRestController {
         Map<String, Object> map = new HashMap<>();
         Integer listingId = (Integer) getValidatedAttribute_NonNull("listingId", payload.get("listingId"));
 
-        Listing listing = repo.findByListingId(listingId.longValue());
+        Listing listing = listingRepo.findByListingId(listingId.longValue());
 
         if (listing == null) {
             throw new NotFoundException("Listing with id [" + listingId + "] cannot be found");
         }
-        map.put("listingId",listingId);
+        map.put("listingId", listingId);
 
         if (setValidatedStringAttributeToMap("isbn", (String) payload.get("isbn"), map)) {
             listing.setISBN((String) payload.get("isbn"));
@@ -145,16 +146,19 @@ public class ListingRestController {
             throw new MissingAttributeException("Attribute 'price' must be formatted in decimal as a string (ex. '1.5')");
         }
 
-        repo.save(listing);
+        listingRepo.save(listing);
+        CartItemRestController.updateAssociatedCartItems_listingInventoryUpdated(listing.getListingId(), cartItemRepo);
         return map;
     }
 
     @DeleteMapping("/listings/{id}")
     public Listing deleteListing(@PathVariable String id) {
-        Optional<Listing> listing = repo.findById(Long.parseLong(id));
+        Optional<Listing> listing = listingRepo.findById(Long.parseLong(id));
         if (listing.isPresent()) {
             listing.get().setActive(false);
-            repo.save(listing.get());
+            listing.get().setInventory(0);
+            listingRepo.save(listing.get());
+            CartItemRestController.updateAssociatedCartItems_listingInventoryUpdated(listing.get().getListingId(), cartItemRepo);
             return listing.get();
         } else {
             throw new NotFoundException("Listing with id [" + id + "] cannot be found");
