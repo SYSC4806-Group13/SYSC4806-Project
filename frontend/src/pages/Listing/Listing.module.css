@@ -1,0 +1,39 @@
+.container{
+    margin-top: 30px;
+    display:flex;
+    flex-direction: row;
+    width: auto;
+}
+.img{
+  width:35%;
+  padding: 15px 15px 0;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+  -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+  -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+}
+
+.listingInfo{
+    padding-left: 10px;
+    width:65%;
+}
+
+.listingTitle{
+    font-size: 35px;
+    text-decoration: underline;
+}
+
+.listingDescription{
+    padding-left: 10px;
+    margin:25px;
+    width:250px;
+    height:250px;
+    background:#fff;
+    border: solid black;
+    border-color: black;
+    border-width: 3px 4px 3px 5px;
+    border-radius:95% 4% 92% 5%/4% 95% 6% 95%;
+    transform: rotate(2deg);
+    display: row;
+    flex-direction: column;
+}

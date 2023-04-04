@@ -12,7 +12,12 @@ export const useHttpClient = () => {
   const host = "http://localhost:8080";
 
   const sendRequest = useCallback(
-    async (path = "", method: httpMethod = "GET", body: {}, queryParameterString: string = "") => {
+    async (
+      path = "",
+      method: httpMethod = "GET",
+      body: {},
+      queryParameterString: string = ""
+    ) => {
       setIsLoading(true);
 
       let requestHeaders = isAuthenticationNeeded(method, path)
@@ -35,12 +40,10 @@ export const useHttpClient = () => {
             res = await axios.post(url, body, config);
             break;
           case "DELETE":
-            res = await axios.delete(url,
-              {
-                headers: requestHeaders,
-                data: body,
-              }
-            );
+            res = await axios.delete(url, {
+              headers: requestHeaders,
+              data: body,
+            });
             break;
           case "PATCH":
             res = await axios.patch(url, body, config);
@@ -55,7 +58,7 @@ export const useHttpClient = () => {
         return res?.data;
       } catch (err: any) {
         if (err.response.data.status === 401) {
-          logOut();
+          //logOut();
         }
         setIsLoading(false);
         throw err;
