@@ -1,0 +1,36 @@
+.title {
+    background: #4175f9;
+    color: #ffffff;
+    width: 100%;
+    padding: 40px 0px;
+    text-align: center;
+}
+.title h1 {
+    padding: 0px;
+    margin: 0px;
+}
+
+.input__wrapper {
+    margin: 20px;
+    text-align: center;
+}
+.input__wrapper input {
+    border: 3px solid #383434;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 18px;
+}
+.input__wrapper input:focus {
+    outline: none;
+}
+.input__wrapper button {
+    background-color: #4160f9;
+    color: white;
+    padding: 8px 15px;
+    font-size: 18px;
+    border: none;
+    border: 3px solid #4166f9;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
