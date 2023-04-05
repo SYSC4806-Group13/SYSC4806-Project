@@ -9,7 +9,6 @@ import { useHttpClient } from "src/hooks/http-hook";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import { UserLoginContext } from "src/context/userLoginContext";
-import { useNavigate } from "react-router-dom";
 
 export interface IAddToCartButtonProps {
   listingId: string;
@@ -20,7 +19,6 @@ export default function AddToCartButton({ listingId }: IAddToCartButtonProps) {
 
   const [quantityInCart, setQuantityInCart] = React.useState(0);
   const [inventory, setInventory] = React.useState(10);
-  const navigate = useNavigate();
   const { sendRequest } = useHttpClient();
 
   // Initial retrieve
@@ -32,6 +30,7 @@ export default function AddToCartButton({ listingId }: IAddToCartButtonProps) {
         {},
         `?listingId=${listingId}`
       );
+      console.log(currentCartItem);
       setQuantityInCart(currentCartItem.quantity);
       setInventory(currentCartItem.inventory);
     };
@@ -86,14 +85,6 @@ export default function AddToCartButton({ listingId }: IAddToCartButtonProps) {
             <>
               <Typography variant="h6" color="success">
                 Cart Quantity: {quantityInCart}{" "}
-                <Button
-                  variant="contained"
-                  color="success"
-                  size="medium"
-                  onClick={() => navigate("/")}
-                >
-                  Add To Cart
-                </Button>
               </Typography>
 
               <IconButton onClick={changeCartQuantity(false)}>

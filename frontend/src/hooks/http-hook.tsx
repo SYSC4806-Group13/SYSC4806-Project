@@ -58,7 +58,7 @@ export const useHttpClient = () => {
         return res?.data;
       } catch (err: any) {
         if (err.response.data.status === 401) {
-          //logOut();
+          logOut();
         }
         setIsLoading(false);
         throw err;

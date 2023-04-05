@@ -9,21 +9,20 @@ import {
   Box,
   Button,
   CardMedia,
-  Paper,
   Typography,
 } from "@mui/material";
 import PageHeader from "src/components/PageHeader/PageHeader";
 import { useNavigate } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddToCartButton from "src/components/Listing/AddToCartButton";
 import { useHttpClient } from "src/hooks/http-hook";
 import { API_BASE_URL, LISTING } from "src/constants/endpoints";
 import RecommendedCarousel from "src/components/Recommended/RecommendedCarousel";
 import { IListingCardProps } from "src/constants/common";
-import { profile } from "console";
 
 const Listing = () => {
-  const { isLoggedIn, profile } = useContext(UserLoginContext);
+  const { isLoggedIn } = useContext(UserLoginContext);
   const navigate = useNavigate();
 
   const [currentListing, setCurrentListing] = useState<IListingCardProps>();
@@ -47,7 +46,7 @@ const Listing = () => {
       setCurrentListing(item);
     };
     getSellerItems();
-  }, []);
+  });
 
   const [recommenedAccoridanExpanded, setRecommenedAccoridanExpanded] =
     React.useState(true);
@@ -64,7 +63,12 @@ const Listing = () => {
 
   return (
     <>
-      <PageHeader headerTitle={currentListing ? currentListing.title : ""}>
+      <PageHeader headerTitle={"Listing"}>
+        <div className={style.back}>
+          <Button onClick={() => navigate(-1)}>
+            <ArrowBackIcon className={style.scale} fontSize="large" />
+          </Button>
+        </div>
         <div className={style.container}>
           <div className={style.img}>
             <Box>
@@ -80,15 +84,13 @@ const Listing = () => {
 
           <div className={style.listingInfo}>
             <div className={style.listingTitle}>
-              {currentListing && "Book Title: " + currentListing.title}
+              {currentListing && currentListing.title}
             </div>
             <div className={style.listingDescription}>
-              <p>
-                {currentListing && "Book Author : " + currentListing.author}
-              </p>
+              <p>{currentListing && "Author : " + currentListing.author}</p>
               <p>
                 {currentListing &&
-                  "Book Description : " + currentListing.description}
+                  "Description : " + currentListing.description}
               </p>
               <p>{currentListing && "ISBN : " + currentListing.isbn}</p>
               <p>{currentListing && "price : $" + currentListing.price}</p>
@@ -112,25 +114,24 @@ const Listing = () => {
               )}
             </div>
           </div>
-
-          {/* <Accordion
-            expanded={recommenedAccoridanExpanded}
-            onChange={handleAccoridanToggle("recommended")}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography gutterBottom variant="h3" align="center">
-                Recommendations
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <RecommendedCarousel />
-            </AccordionDetails>
-          </Accordion> */}
         </div>
+        <Accordion
+          expanded={recommenedAccoridanExpanded}
+          onChange={handleAccoridanToggle("recommended")}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography gutterBottom variant="h3" align="center">
+              Recommendations
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <RecommendedCarousel />
+          </AccordionDetails>
+        </Accordion>
       </PageHeader>
     </>
   );
