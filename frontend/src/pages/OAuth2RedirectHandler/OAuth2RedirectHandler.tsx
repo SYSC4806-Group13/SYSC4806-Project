@@ -35,10 +35,20 @@ const OAuth2RedirectHandler = () => {
         navigate("/login");
       }
     }
-  }, [profile, logIn, navigate, setProfile, sendRequest, done, setDone]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if (done) navigate("/");
+    if (done) {
+      const redirect = localStorage.getItem("amazin_redirectListing");
+      localStorage.removeItem("amazin_redirectListing");
+      console.log(redirect + "redirct");
+      if (redirect !== null) {
+        navigate("/listing/" + redirect);
+      } else {
+        navigate("/");
+      }
+    }
   }, [profile, navigate, done]);
 
   return <></>;

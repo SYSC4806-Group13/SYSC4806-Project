@@ -29,3 +29,19 @@ export type profileType = {
   email: string;
   isSeller: string;
 };
+
+export interface IListingCardProps {
+  cardName: string,
+  author: string,
+  title: string,
+  price: string,
+  image: string,
+  alt: string,
+  carousel?: boolean,
+  listingId: string,
+  isbn: string,
+  publisher: string,
+  description: string,
+  inventory: string,
+  releaseDate: string,
+}
