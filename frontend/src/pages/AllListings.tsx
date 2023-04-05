@@ -11,13 +11,17 @@ import PageHeader from "src/components/PageHeader/PageHeader";
 import { LISTING } from "src/constants/endpoints";
 import { useHttpClient } from "src/hooks/http-hook";
 import { buildListings } from "src/utils/listings";
+
 import RecommendedCarousel from "src/components/Recommended/RecommendedCarousel";
+import "src/styles/BookSearch.css";
 
 export interface IAllListingsProps {}
 
 export default function AllListings(props: IAllListingsProps) {
   const [listings, setListings] = React.useState([]);
+  const [searchText, setSearchText] = React.useState<string>("");
   const { sendRequest } = useHttpClient();
+
   React.useEffect(() => {
     const getSellerItems = async () => {
       let items = await sendRequest(LISTING, "GET", {});
@@ -39,9 +43,29 @@ export default function AllListings(props: IAllListingsProps) {
       setListingsAccoridanExpanded(!listingsAccoridanExpanded);
     }
   };
+
+  // @ts-ignore
+  const searchFilter = (listing) => {
+    return (
+      listing.title.toLowerCase().includes(searchText.toLowerCase()) ||
+      listing.author.toLowerCase().includes(searchText.toLowerCase()) ||
+      listing.isbn.toLowerCase().includes(searchText.toLowerCase())
+    );
+  };
+
   return (
     <React.Fragment>
       <PageHeader headerTitle="All Listings">
+        <div className="input__wrapper">
+          <input
+            type="text"
+            placeholder="Search Book"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+          />
+        </div>
         <Accordion
           expanded={recommenedAccoridanExpanded}
           onChange={handleAccoridanToggle("recommended")}
@@ -73,7 +97,7 @@ export default function AllListings(props: IAllListingsProps) {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <ListingGrid listings={listings} />
+            <ListingGrid listings={listings.filter(searchFilter)} />
           </AccordionDetails>
         </Accordion>
       </PageHeader>

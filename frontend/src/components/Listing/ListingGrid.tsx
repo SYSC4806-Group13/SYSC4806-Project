@@ -14,21 +14,24 @@ import {
 import ListingCard from "src/components/Listing/ListingCard";
 import "src/styles/ListingGrid.css";
 
+
+export interface IListingProps
+{
+  cardName: string;
+  author: string;
+  price: string;
+  image: string;
+  alt: string;
+  title: string;
+  listingId: string;
+  isbn: string;
+  publisher: string;
+  description: string;
+  inventory: string;
+  releaseDate: string;
+}
 export interface IListingGridProps {
-  listings: Array<{
-    cardName: string;
-    author: string;
-    price: string;
-    image: string;
-    alt: string;
-    title: string;
-    listingId: string;
-    isbn: string;
-    publisher: string;
-    description: string;
-    inventory: string;
-    releaseDate: string;
-  }>;
+  listings: Array<IListingProps>;
 }
 
 const sortMenuOptions = [
@@ -69,10 +72,10 @@ export default function ListingGrid({ listings }: IListingGridProps) {
     listings.forEach((val) => myClonedArray.push(Object.assign({}, val)));
     switch (sortingType) {
       case "Alphabetic":
-        myClonedArray.sort((a, b) => (a.title > b.title ? 1 : -1));
+        myClonedArray.sort((a, b) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
         break;
       case "ReverseAlphabetic":
-        myClonedArray.sort((a, b) => (b.title > a.title ? 1 : -1));
+        myClonedArray.sort((a, b) => (b.title.toLowerCase() > a.title.toLowerCase() ? 1 : -1));
         break;
       case "Expensive":
         myClonedArray.sort((a, b) => (a.price < b.price ? 1 : -1));
@@ -81,7 +84,7 @@ export default function ListingGrid({ listings }: IListingGridProps) {
         myClonedArray.sort((a, b) => (b.price < a.price ? 1 : -1));
         break;
       case "AuthorAlphabetic":
-        myClonedArray.sort((a, b) => (a.author > b.author ? 1 : -1));
+        myClonedArray.sort((a, b) => (a.author.toLowerCase() > b.author.toLowerCase() ? 1 : -1));
         break;
       case "ReleaseDateOldest":
         myClonedArray.sort((a, b) => (a.releaseDate > b.releaseDate ? 1 : -1));
