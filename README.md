@@ -65,8 +65,24 @@
 
 ### Milestone/Sprint 3 - Starting March 22nd
 
-- Complete manual integration testing QA
-- Features
+- Complete automation + manual integration testing QA
+- Features complete
     - Recommendation system with Jaccard
-    - Investigate options for live deployment
-- Overall styling overhaul
+    - Cart Feature
+    - Checkout feature
+    - O-Auth Spring Security (Login with gmail)
+    - Editing Listings with Cover images
+    - Filtering Listings
+    - Individual Listings page
+    - Profile Page
+
+Important notices
+- To test Jaccard, you will need 2 gmail accounts for the recommendations
+- To test manually:
+        1. Login into normal tab with account 1
+        2. Login into an incognito tab with account 2
+        3. Create 3 listings from 1 of the accounts
+        4. Account 1 purchases Listing 1 + 2
+        5. Account 2 purchases listing 2 + 3
+        6. See the recommendation of Listing 1 for account 2 and Listing 3 for account 1
+
