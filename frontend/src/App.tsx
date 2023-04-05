@@ -11,6 +11,7 @@ import Login from "src/pages/Login/Login";
 import Cart from "src/pages/Cart/Cart";
 import OrderHistory from "src/components/OrderHistory/OrderHistory";
 import SimulatedPayment from "src/components/SimulatedPayment/SimulatedPayment";
+import Listing from "./pages/Listing/Listing";
 
 export default function App() {
   const { isLoggedIn, profile } = useContext(UserLoginContext);
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/orderHistory" element={<OrderHistory />} />
         <Route path="/simulatedPayment" element={<SimulatedPayment />} />
+        <Route path="/listing/*" element={<Listing />} />
         <Route
           path="/protected"
           element={isLoggedInRouteAccess(
