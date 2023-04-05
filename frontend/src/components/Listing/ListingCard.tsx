@@ -15,7 +15,6 @@ import { useContext } from "react";
 import { UserLoginContext } from "src/context/userLoginContext";
 import { useLocation } from "react-router-dom";
 import "src/styles/ListingCard.css";
-import AddToCartButton from "src/components/Listing/AddToCartButton";
 import { IListingCardProps } from "src/constants/common";
 import { useNavigate } from "react-router-dom";
 
