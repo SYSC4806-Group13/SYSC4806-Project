@@ -35,6 +35,7 @@ const Listing = () => {
   };
 
   const { sendRequest } = useHttpClient();
+
   useEffect(() => {
     const getSellerItems = async () => {
       let item: IListingCardProps = await sendRequest(
@@ -46,7 +47,8 @@ const Listing = () => {
       setCurrentListing(item);
     };
     getSellerItems();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [recommenedAccoridanExpanded, setRecommenedAccoridanExpanded] =
     React.useState(true);
