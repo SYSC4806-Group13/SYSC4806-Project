@@ -91,6 +91,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers(HttpMethod.GET, "/listings")
                 .permitAll()
+                .requestMatchers(HttpMethod.GET, "/listings/*")
+                .permitAll()
                 .requestMatchers(HttpMethod.GET, "/covers/*")
                 .permitAll()
                 .requestMatchers("/auth/**", "/oauth2/**") //End points for dealing with auth2
