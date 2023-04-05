@@ -78,11 +78,12 @@
 
 Important notices
 - To test Jaccard, you will need 2 gmail accounts for the recommendations
-- To test manually:
-        1. Login into normal tab with account 1
-        2. Login into an incognito tab with account 2
-        3. Create 3 listings from 1 of the accounts
-        4. Account 1 purchases Listing 1 + 2
-        5. Account 2 purchases listing 2 + 3
-        6. See the recommendation of Listing 1 for account 2 and Listing 3 for account 1
+- To test manually use the following steps:
+
+    1. Login into normal tab with account 1
+    2. Login into an incognito tab with account 2
+    3. Create 3 listings from 1 of the accounts
+    4. Account 1 purchases Listing 1 + 2
+    5. Account 2 purchases listing 2 + 3
+    6. See the recommendation of Listing 1 for account 2 and Listing 3 for account 1
 
