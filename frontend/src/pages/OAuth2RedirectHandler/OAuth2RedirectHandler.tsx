@@ -42,7 +42,6 @@ const OAuth2RedirectHandler = () => {
     if (done) {
       const redirect = localStorage.getItem("amazin_redirectListing");
       localStorage.removeItem("amazin_redirectListing");
-      console.log(redirect + "redirct");
       if (redirect !== null) {
         navigate("/listing/" + redirect);
       } else {

@@ -30,7 +30,7 @@ export default function AddToCartButton({ listingId }: IAddToCartButtonProps) {
         {},
         `?listingId=${listingId}`
       );
-      console.log(currentCartItem);
+
       setQuantityInCart(currentCartItem.quantity);
       setInventory(currentCartItem.inventory);
     };

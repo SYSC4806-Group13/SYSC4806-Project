@@ -25,8 +25,6 @@ export default function Profile() {
     setProfile(profile1);
   };
 
-  console.log(profile);
-
   return (
     <PageHeader headerTitle="Profile">
       <div className={style.container}>
